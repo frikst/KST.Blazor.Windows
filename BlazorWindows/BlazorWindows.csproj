@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>KST.Blazor.Windows</RootNamespace>
+    <AssemblyName>KST.Blazor.Windows</AssemblyName>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>

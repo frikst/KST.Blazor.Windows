@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KST.Blazor.Windows;
 
 namespace BlazorWindowsExample
 {
@@ -29,6 +30,8 @@ namespace BlazorWindowsExample
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
 			services.AddSingleton<WeatherForecastService>();
+
+			services.AddBlazorWindows();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
