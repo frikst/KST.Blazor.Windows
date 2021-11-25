@@ -5,12 +5,22 @@
 <p>Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="OpenWindow">Open</button>
 
 @code {
+    [Inject]
+    public IWindowManagement WindowManagement { get; set; }
+
     private int currentCount = 0;
 
     private void IncrementCount()
     {
         currentCount++;
     }
+
+    private async Task OpenWindow()
+    {
+        await this.WindowManagement.OpenWindow<Counter>();
+    }
+
 }
