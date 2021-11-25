@@ -1,0 +1,8 @@
+﻿@if (this.Window is WindowImpl impl)
+{
+<div>
+    <div @ref="this.aWindowRef">
+        @(new RenderFragment(this.RenderWindowContent))
+    </div>
+</div>
+}

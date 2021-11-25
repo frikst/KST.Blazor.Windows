@@ -1,1 +1,9 @@
-﻿
+﻿<div style="display: none">
+    @if (this.WindowManagement is WindowManagementImpl impl)
+    {
+        foreach (var window in impl.Windows)
+        {
+            <InternalWindowHandlerComponent Window="@window" @key="window.Id" />
+        }
+    }
+</div>
