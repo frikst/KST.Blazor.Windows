@@ -23,13 +23,14 @@ namespace KST.Blazor.Windows
 			where TComponent : ComponentBase
 			=> await this.OpenWindow<TComponent>(new NewWindowOptions());
 
-		public Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
+		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase
 		{
-			var newWindow = new WindowImpl<TComponent>();
+			var newWindow = new WindowImpl<TComponent>(options);
 			this.aWindows.Add(newWindow);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
-			return Task.FromResult<IWindow<TComponent>>(newWindow);
+			await newWindow.WaitOpen();
+			return newWindow;
 		}
 	}
 }

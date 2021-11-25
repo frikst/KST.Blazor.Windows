@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace KST.Blazor.Windows
 {
 	public partial class InternalWindowHandlerComponent : ComponentBase
 	{
-		private ElementReference aWindowRef;
+		private ElementReference aWindowElementRef;
+
+		[Inject]
+		public WindowHandlerInterop WindowHandler { get; set; }
+			= default!;
 
 		[Parameter]
 		public IWindow Window { get; set; }
@@ -17,6 +22,17 @@ namespace KST.Blazor.Windows
 			{
 				builder.OpenComponent(0, impl.ComponentType);
 				builder.CloseComponent();
+			}
+		}
+
+		protected override async Task OnAfterRenderAsync(bool firstRender)
+		{
+			await base.OnAfterRenderAsync(firstRender);
+
+			if (this.Window is WindowImpl impl)
+			{
+				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, "menubar=no, toolbar=no, titlebar=no, location=no");
+				impl.AfterOpen();
 			}
 		}
 	}
