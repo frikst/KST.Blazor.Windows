@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace KST.Blazor.Windows
 {
 	public interface IWindowManagement
 	{
-		IWindow<TComponent> OpenWindow<TComponent>(NewWindowOptions options)
+		Task<IWindow<TComponent>> OpenWindow<TComponent>()
+			where TComponent : ComponentBase;
+
+		Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase;
 	}
 }
