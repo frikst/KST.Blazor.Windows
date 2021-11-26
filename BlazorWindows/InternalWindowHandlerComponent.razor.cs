@@ -29,6 +29,9 @@ namespace KST.Blazor.Windows
 		{
 			await base.OnAfterRenderAsync(firstRender);
 
+			if (!firstRender)
+				return;
+
 			if (this.Window is WindowImpl impl)
 			{
 				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, "menubar=no, toolbar=no, titlebar=no, location=no");
