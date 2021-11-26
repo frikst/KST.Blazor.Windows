@@ -1,6 +1,6 @@
 ﻿const originalAddEventListener = document.addEventListener;
 
-var windows = [];
+var windows = {};
 var eventListeners = [];
 
 export function OpenWindow(id, content, windowFeatures) {
@@ -33,13 +33,25 @@ function customAddEventListener(type, listener, options) {
     console.log(type, listener, options);
     eventListeners.push([type, listener, options]);
 
-    for (let win of windows) {
-        win.document.addEventListener(type, listener, options);
+    for (let id in windows) {
+        if (windows.hasOwnProperty(id)) {
+            windows[id].document.addEventListener(type, listener, options);
+        }
     }
 
     originalAddEventListener(type, listener, options);
 }
 
+function closeAllWindows(e) {
+    for (let id in windows) {
+        if (windows.hasOwnProperty(id)) {
+            windows[id].close();
+        }
+    }
+}
+
 export function Init() {
     document.addEventListener = customAddEventListener;
+
+    window.addEventListener("unload", closeAllWindows);
 }
