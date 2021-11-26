@@ -21,6 +21,12 @@ namespace KST.Blazor.Windows
 			await module.InvokeVoidAsync("OpenWindow", id.ToString(), bodyElementRef, windowFeatures);
 		}
 
+		public async Task AssignWindowContainerCallbacks(WindowContainer.Callbacks windowContainerCallbacks)
+		{
+			var module = await this.aModule.Value;
+			await module.InvokeVoidAsync("AssignWindowContainerCallbacks", DotNetObjectReference.Create(windowContainerCallbacks));
+		}
+
 		public async ValueTask DisposeAsync()
 		{
 			if (this.aModule.IsValueCreated)

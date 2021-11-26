@@ -2,9 +2,17 @@
 
 var windows = {};
 var eventListeners = [];
+var windowContainerCallbacks = null;
+
+export function AssignWindowContainerCallbacks(containerCallbacks) {
+    windowContainerCallbacks = containerCallbacks;
+}
 
 export function OpenWindow(id, content, windowFeatures) {
     let win = window.open("about:blank", id, windowFeatures);
+
+    win.addEventListener("unload", () => windowClosed(id));
+
     windows[id] = win;
 
     let baseUrl = new URL(
@@ -29,6 +37,13 @@ export function OpenWindow(id, content, windowFeatures) {
     win.document.body.appendChild(content);
 }
 
+function windowClosed(id) {
+    delete windows[id];
+    if (windowContainerCallbacks != null) {
+        windowContainerCallbacks.invokeMethodAsync("OnWindowClosed", id);
+    }
+}
+
 function customAddEventListener(type, listener, options) {
     console.log(type, listener, options);
     eventListeners.push([type, listener, options]);
@@ -42,7 +57,7 @@ function customAddEventListener(type, listener, options) {
     originalAddEventListener(type, listener, options);
 }
 
-function closeAllWindows(e) {
+function closeAllWindows() {
     for (let id in windows) {
         if (windows.hasOwnProperty(id)) {
             windows[id].close();

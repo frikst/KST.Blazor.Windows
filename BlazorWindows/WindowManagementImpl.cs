@@ -32,5 +32,11 @@ namespace KST.Blazor.Windows
 			await newWindow.WaitOpen();
 			return newWindow;
 		}
+
+		public void OnWindowClosed(Guid id)
+		{
+			this.aWindows.RemoveAll(x => x.Id == id);
+			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
+		}
 	}
 }
