@@ -8,24 +8,6 @@ namespace KST.Blazor.Windows
 {
 	public partial class WindowContainer
 	{
-		public class Callbacks
-		{
-			private WindowContainer aWindowContainer;
-
-			internal Callbacks(WindowContainer windowContainer)
-			{
-				this.aWindowContainer = windowContainer;
-			}
-
-			[JSInvokable]
-			public void OnWindowClosed(string id)
-			{
-				if (this.aWindowContainer.WindowManagement is WindowManagementImpl impl)
-				{
-					impl.OnWindowClosed(Guid.Parse(id));
-				}
-			}
-		}
 
 		[Inject]
 		public IWindowManagement WindowManagement { get; set; }
@@ -52,7 +34,7 @@ namespace KST.Blazor.Windows
 			if (firstRender)
 				return;
 
-			await this.WindowHandler.AssignWindowContainerCallbacks(new Callbacks(this));
+			await this.WindowHandler.AssignWindowManagement(this.WindowManagement);
 		}
 
 		private void WindowManagementWindowsChanged(object? sender, EventArgs e)

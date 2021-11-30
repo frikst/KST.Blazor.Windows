@@ -2,10 +2,10 @@
 
 var windows = {};
 var eventListeners = [];
-var windowContainerCallbacks = null;
+var windowManagement = null;
 
-export function AssignWindowContainerCallbacks(containerCallbacks) {
-    windowContainerCallbacks = containerCallbacks;
+export function AssignWindowManagement(windowManagementRef) {
+    windowManagement = windowManagementRef;
 }
 
 export function OpenWindow(id, content, windowFeatures, windowTitle) {
@@ -42,8 +42,8 @@ export function OpenWindow(id, content, windowFeatures, windowTitle) {
 
 function windowClosed(id) {
     delete windows[id];
-    if (windowContainerCallbacks != null) {
-        windowContainerCallbacks.invokeMethodAsync("OnWindowClosed", id);
+    if (windowManagement != null) {
+        windowManagement.invokeMethodAsync("OnWindowClosed", id);
     }
 }
 

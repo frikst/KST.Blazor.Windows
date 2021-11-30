@@ -8,6 +8,22 @@ namespace KST.Blazor.Windows.Internal
 {
 	public class WindowHandlerInterop : IAsyncDisposable
 	{
+		public class WindowManagementCallbacks
+		{
+			private readonly WindowManagementImpl aWindowManagement;
+
+			internal WindowManagementCallbacks(WindowManagementImpl windowManagement)
+			{
+				this.aWindowManagement = windowManagement;
+			}
+
+			[JSInvokable]
+			public void OnWindowClosed(string id)
+			{
+				this.aWindowManagement.OnWindowClosed(Guid.Parse(id));
+			}
+		}
+
 		private readonly Lazy<Task<IJSObjectReference>> aModule;
 
 		public WindowHandlerInterop(IJSRuntime jsRuntime)
@@ -21,10 +37,13 @@ namespace KST.Blazor.Windows.Internal
 			await module.InvokeVoidAsync("OpenWindow", id.ToString(), bodyElementRef, windowFeatures, windowTitle);
 		}
 
-		public async Task AssignWindowContainerCallbacks(WindowContainer.Callbacks windowContainerCallbacks)
+		public async Task AssignWindowManagement(IWindowManagement windowManagement)
 		{
-			var module = await this.aModule.Value;
-			await module.InvokeVoidAsync("AssignWindowContainerCallbacks", DotNetObjectReference.Create(windowContainerCallbacks));
+			if (windowManagement is WindowManagementImpl impl)
+			{
+				var module = await this.aModule.Value;
+				await module.InvokeVoidAsync("AssignWindowManagement", DotNetObjectReference.Create(new WindowManagementCallbacks(impl)));
+			}
 		}
 
 		public async ValueTask DisposeAsync()
