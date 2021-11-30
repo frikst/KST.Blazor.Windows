@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace KST.Blazor.Windows
+namespace KST.Blazor.Windows.Internal
 {
 	public class WindowHandlerInterop : IAsyncDisposable
 	{

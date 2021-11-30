@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace KST.Blazor.Windows
+namespace KST.Blazor.Windows.Internal
 {
 	public partial class InternalWindowHandlerComponent : ComponentBase
 	{

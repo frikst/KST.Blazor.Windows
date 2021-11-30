@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace KST.Blazor.Windows
+namespace KST.Blazor.Windows.Internal
 {
 	internal abstract class WindowImpl : IWindow
 	{

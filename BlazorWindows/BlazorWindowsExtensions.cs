@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using KST.Blazor.Windows.Internal;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace KST.Blazor.Windows
 {
