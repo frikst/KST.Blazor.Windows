@@ -8,8 +8,11 @@ export function AssignWindowContainerCallbacks(containerCallbacks) {
     windowContainerCallbacks = containerCallbacks;
 }
 
-export function OpenWindow(id, content, windowFeatures) {
+export function OpenWindow(id, content, windowFeatures, windowTitle) {
     let win = window.open("about:blank", id, windowFeatures);
+
+    if (windowTitle !== null)
+        win.document.title = windowTitle;
 
     win.addEventListener("unload", () => windowClosed(id));
 

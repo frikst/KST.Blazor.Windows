@@ -21,12 +21,12 @@
 
     private async Task OpenWindow()
     {
-        await this.WindowManagement.OpenWindow<Counter>();
+        await this.WindowManagement.OpenWindow<Counter>(new() { Title = "Counter" });
     }
 
     private async Task OpenTab()
     {
-        await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab);
+        await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab with{ Title = "Counter"});
     }
 
 }

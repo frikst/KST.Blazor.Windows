@@ -22,6 +22,9 @@ namespace KST.Blazor.Windows
 		public int? Height { get; init; }
 			= null;
 
+		public string? Title { get; init; }
+			= null;
+
 		public string BuildWindowFeatures()
 		{
 			if (this.aIsTab)

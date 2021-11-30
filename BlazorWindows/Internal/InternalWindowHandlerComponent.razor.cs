@@ -34,7 +34,7 @@ namespace KST.Blazor.Windows.Internal
 
 			if (this.Window is WindowImpl impl)
 			{
-				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, impl.WindowOptions.BuildWindowFeatures());
+				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, impl.WindowOptions.BuildWindowFeatures(), impl.WindowOptions.Title);
 				impl.AfterOpen();
 			}
 		}
