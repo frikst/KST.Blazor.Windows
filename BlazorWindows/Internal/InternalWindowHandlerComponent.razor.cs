@@ -34,7 +34,7 @@ namespace KST.Blazor.Windows.Internal
 
 			if (this.Window is WindowImpl impl)
 			{
-				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, "menubar=no, toolbar=no, titlebar=no, location=no");
+				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, impl.WindowOptions.BuildWindowFeatures());
 				impl.AfterOpen();
 			}
 		}

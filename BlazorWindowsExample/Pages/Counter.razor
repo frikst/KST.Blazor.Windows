@@ -6,6 +6,7 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 <button class="btn btn-primary" @onclick="OpenWindow">Open</button>
+<button class="btn btn-primary" @onclick="OpenTab">Open as tab</button>
 
 @code {
     [Inject]
@@ -21,6 +22,11 @@
     private async Task OpenWindow()
     {
         await this.WindowManagement.OpenWindow<Counter>();
+    }
+
+    private async Task OpenTab()
+    {
+        await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab);
     }
 
 }

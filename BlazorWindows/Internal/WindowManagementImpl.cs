@@ -21,7 +21,7 @@ namespace KST.Blazor.Windows.Internal
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(new NewWindowOptions());
+			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty);
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase

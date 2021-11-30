@@ -18,6 +18,8 @@ namespace KST.Blazor.Windows.Internal
 
 		public abstract Type ComponentType { get; }
 
+		public abstract NewWindowOptions WindowOptions { get; }
+
 		public Task WaitOpen()
 			=> this.aOpenTask.Task;
 
@@ -32,9 +34,12 @@ namespace KST.Blazor.Windows.Internal
 	{
 		public WindowImpl(NewWindowOptions options)
 		{
+			this.WindowOptions = options;
 		}
 
 		public override Type ComponentType
 			=> typeof(TComponent);
+
+		public override NewWindowOptions WindowOptions { get; }
 	}
 }
