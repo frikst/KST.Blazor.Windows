@@ -1,0 +1,15 @@
+{
+  "name": "Blazor windows example",
+  "short_name": "blazorWindowsExample",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f7f7f7",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
