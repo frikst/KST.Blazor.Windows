@@ -12,7 +12,17 @@
     [Inject]
     public IWindowManagement WindowManagement { get; set; }
 
+    [Parameter]
+    public int Start { get; set; }
+        = 0;
+
     private int currentCount = 0;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.currentCount = this.Start;
+    }
 
     private void IncrementCount()
     {
@@ -21,12 +31,12 @@
 
     private async Task OpenWindow()
     {
-        await this.WindowManagement.OpenWindow<Counter>(new() { Title = "Counter" });
+        await this.WindowManagement.OpenWindow<Counter>(new NewWindowOptions() { Title = "Counter" }, new Dictionary<string, object> { { nameof(Start), currentCount } });
     }
 
     private async Task OpenTab()
     {
-        await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab with{ Title = "Counter"});
+        await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab with{ Title = "Counter"}, new Dictionary<string, object> { { nameof(Start), currentCount } });
     }
 
 }

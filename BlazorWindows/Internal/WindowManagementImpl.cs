@@ -21,12 +21,20 @@ namespace KST.Blazor.Windows.Internal
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty);
+			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty, new Dictionary<string, object>());
+
+		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(IReadOnlyDictionary<string, object> parameters)
+			where TComponent : ComponentBase
+			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty, parameters);
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase
+			=> await this.OpenWindow<TComponent>(options, new Dictionary<string, object>());
+
+		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, IReadOnlyDictionary<string, object> parameters)
+			where TComponent : ComponentBase
 		{
-			var newWindow = new WindowImpl<TComponent>(options);
+			var newWindow = new WindowImpl<TComponent>(options, parameters);
 			this.aWindows.Add(newWindow);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
 			await newWindow.WaitOpen();

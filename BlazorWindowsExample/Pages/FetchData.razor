@@ -36,11 +36,28 @@ else
     </table>
 }
 
+<button class="btn btn-primary" @onclick="OpenWindow">Open</button>
+<button class="btn btn-primary" @onclick="OpenTab">Open as tab</button>
+
 @code {
     private WeatherForecast[] forecasts;
+
+    [Inject]
+    public IWindowManagement WindowManagement { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+    private async Task OpenWindow()
+    {
+        await this.WindowManagement.OpenWindow<FetchData>(new NewWindowOptions() { Title = "Weather" });
+    }
+
+    private async Task OpenTab()
+    {
+        await this.WindowManagement.OpenWindow<FetchData>(NewWindowOptions.AsTab with { Title = "Weather" });
     }
 }
