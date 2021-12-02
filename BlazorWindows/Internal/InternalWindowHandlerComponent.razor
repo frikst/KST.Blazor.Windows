@@ -1,8 +1,10 @@
 ﻿@if (this.Window is WindowImpl impl)
 {
-<div>
-    <div @ref="this.aWindowElementRef">
-        @(new RenderFragment(this.RenderWindowContent))
-    </div>
-</div>
+    <CascadingValue Value="@this.Window" IsFixed="true">
+        <div>
+            <div @ref="this.aWindowElementRef">
+                @(new RenderFragment(this.RenderWindowContent))
+            </div>
+        </div>
+    </CascadingValue>
 }
