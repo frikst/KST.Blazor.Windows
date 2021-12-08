@@ -24,20 +24,25 @@ namespace KST.Blazor.Windows.Internal
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty, new Dictionary<string, object>());
+			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty, null!);
 
-		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(IReadOnlyDictionary<string, object> parameters)
+		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase
 			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty, parameters);
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(options, new Dictionary<string, object>());
+			=> await this.OpenWindow<TComponent>(options, null!);
 
-		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, IReadOnlyDictionary<string, object> parameters)
+		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase
 		{
-			var newWindow = new WindowImpl<TComponent>(this.aWindowHandler, options, parameters);
+			var parameterBag = new ComponentParameterBag<TComponent>();
+
+			if (parameters is not null)
+				parameterBag.Apply(parameters);
+
+			var newWindow = new WindowImpl<TComponent>(this.aWindowHandler, options, parameterBag);
 			this.aWindows.Add(newWindow);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
 			await newWindow.WaitOpen();

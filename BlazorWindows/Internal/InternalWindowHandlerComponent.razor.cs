@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -23,8 +23,8 @@ namespace KST.Blazor.Windows.Internal
 			{
 				builder.OpenComponent(0, impl.ComponentType);
 
-				if (impl.Parameters.Any())
-					builder.AddMultipleAttributes(1, impl.Parameters);
+				if (!impl.Parameters.IsEmpty)
+					builder.AddMultipleAttributes(1, impl.Parameters.BuildParameters()!);
 
 				builder.CloseComponent();
 			}

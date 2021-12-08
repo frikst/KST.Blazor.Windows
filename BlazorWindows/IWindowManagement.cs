@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -9,13 +10,13 @@ namespace KST.Blazor.Windows
 		Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase;
 
-		Task<IWindow<TComponent>> OpenWindow<TComponent>(IReadOnlyDictionary<string, object> parameters)
+		Task<IWindow<TComponent>> OpenWindow<TComponent>(Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase;
 
 		Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase;
 
-		Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, IReadOnlyDictionary<string, object> parameters)
+		Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase;
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -10,7 +9,7 @@ namespace KST.Blazor.Windows.Internal
 		private readonly WindowHandlerInterop aWindowHandler;
 		private readonly TaskCompletionSource aOpenTask;
 
-		protected WindowImpl(WindowHandlerInterop windowHandler, NewWindowOptions options, IReadOnlyDictionary<string, object> parameters)
+		protected WindowImpl(WindowHandlerInterop windowHandler, NewWindowOptions options, ComponentParameterBag parameters)
 		{
 			this.aWindowHandler = windowHandler;
 			this.Id = Guid.NewGuid();
@@ -34,7 +33,7 @@ namespace KST.Blazor.Windows.Internal
 
 		public NewWindowOptions WindowOptions { get; }
 
-		public IReadOnlyDictionary<string, object> Parameters { get; }
+		public ComponentParameterBag Parameters { get; }
 
 		public Task WaitOpen()
 			=> this.aOpenTask.Task;
@@ -48,8 +47,8 @@ namespace KST.Blazor.Windows.Internal
 	internal class WindowImpl<TComponent> : WindowImpl, IWindow<TComponent>
 		where TComponent : ComponentBase
 	{
-		public WindowImpl(WindowHandlerInterop windowHandler, NewWindowOptions options, IReadOnlyDictionary<string, object> parameters)
-			: base(windowHandler, options, parameters)
+		public WindowImpl(WindowHandlerInterop windowHandler, NewWindowOptions options, ComponentParameterBag<TComponent> parameterBag)
+			: base(windowHandler, options, parameterBag)
 		{
 			
 		}

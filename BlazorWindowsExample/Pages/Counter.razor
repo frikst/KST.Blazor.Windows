@@ -33,12 +33,16 @@
 
     private async Task OpenWindow()
     {
-        await this.WindowManagement.OpenWindow<Counter>(new NewWindowOptions() { Title = "Counter" }, new Dictionary<string, object> { { nameof(Start), currentCount } });
+        await this.WindowManagement.OpenWindow<Counter>(new NewWindowOptions() { Title = "Counter" }, parameters => parameters
+            .Set(p => p.Start, currentCount)
+        );
     }
 
     private async Task OpenTab()
     {
-        await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab with{ Title = "Counter"}, new Dictionary<string, object> { { nameof(Start), currentCount } });
+        await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab with{ Title = "Counter"}, parameters => parameters
+            .Set(p => p.Start, currentCount)
+        );
     }
 
 }
