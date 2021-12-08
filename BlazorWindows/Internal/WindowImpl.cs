@@ -23,8 +23,13 @@ namespace KST.Blazor.Windows.Internal
 
 		public string Title { get; private set; }
 
+		public bool IsDisposed { get; private set; }
+
 		public async Task ChangeTitle(string title)
 		{
+			if (this.IsDisposed)
+				throw new InvalidOperationException("Cannot modify title of disposed window");
+
 			await this.aWindowHandler.ChangeWindowTitle(this.Id, title);
 			this.Title = title;
 		}
@@ -42,6 +47,11 @@ namespace KST.Blazor.Windows.Internal
 		{
 			this.aOpenTask.SetResult();
 		}
+
+		public void OnWindowClosed()
+		{
+			this.IsDisposed = true;
+		}
 	}
 
 	internal class WindowImpl<TComponent> : WindowImpl, IWindow<TComponent>
@@ -58,6 +68,9 @@ namespace KST.Blazor.Windows.Internal
 
 		public void ChangeParameters(Action<IComponentParameterBag<TComponent>> parameters)
 		{
+			if (this.IsDisposed)
+				throw new InvalidOperationException("Cannot modify parameters of component in disposed window");
+
 			((ComponentParameterBag<TComponent>)this.Parameters).Apply(parameters);
 		}
 	}

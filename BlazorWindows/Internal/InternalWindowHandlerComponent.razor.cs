@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace KST.Blazor.Windows.Internal
 {
-	public partial class InternalWindowHandlerComponent : ComponentBase
+	public partial class InternalWindowHandlerComponent : ComponentBase, IDisposable
 	{
 		private ElementReference aWindowElementRef;
 		private IWindow aWindow = default!;
@@ -60,6 +60,12 @@ namespace KST.Blazor.Windows.Internal
 				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, impl.WindowOptions.BuildWindowFeatures(), impl.WindowOptions.Title);
 				impl.AfterOpen();
 			}
+		}
+
+		public void Dispose()
+		{
+			if (this.aWindow is WindowImpl oldImpl)
+				oldImpl.Parameters.Changed -= this.OnWindowParametersChanged;
 		}
 	}
 }

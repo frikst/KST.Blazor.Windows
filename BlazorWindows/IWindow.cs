@@ -10,6 +10,8 @@ namespace KST.Blazor.Windows
 
 		public string Title { get; }
 
+		public bool IsDisposed { get; }
+
 		public Task ChangeTitle(string title);
 	}
 

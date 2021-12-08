@@ -8,19 +8,19 @@ namespace KST.Blazor.Windows.Internal
 	internal class WindowManagementImpl : IWindowManagement
 	{
 		private readonly WindowHandlerInterop aWindowHandler;
-		private readonly List<WindowImpl> aWindows;
+		private readonly Dictionary<Guid, WindowImpl> aWindows;
 
 		public WindowManagementImpl(WindowHandlerInterop windowHandler)
 		{
 			this.aWindowHandler = windowHandler;
 
-			this.aWindows = new List<WindowImpl>();
+			this.aWindows = new Dictionary<Guid, WindowImpl>();
 		}
 
 		public event EventHandler? WindowsChanged;
 
 		public IReadOnlyCollection<WindowImpl> Windows
-			=> this.aWindows;
+			=> this.aWindows.Values;
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase
@@ -43,7 +43,7 @@ namespace KST.Blazor.Windows.Internal
 				parameterBag.Apply(parameters);
 
 			var newWindow = new WindowImpl<TComponent>(this.aWindowHandler, options, parameterBag);
-			this.aWindows.Add(newWindow);
+			this.aWindows.Add(newWindow.Id, newWindow);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
 			await newWindow.WaitOpen();
 			return newWindow;
@@ -51,7 +51,9 @@ namespace KST.Blazor.Windows.Internal
 
 		public void OnWindowClosed(Guid id)
 		{
-			this.aWindows.RemoveAll(x => x.Id == id);
+			var window = this.aWindows[id];
+			window.OnWindowClosed();
+			this.aWindows.Remove(id);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
 		}
 	}

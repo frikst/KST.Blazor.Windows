@@ -10,7 +10,7 @@
 <button class="btn btn-primary" @onclick="OpenWindow">Open</button>
 <button class="btn btn-primary" @onclick="OpenTab">Open as tab</button>
 
-@if (aLastWindow is not null)
+@if (aLastWindow is not null && !aLastWindow.IsDisposed)
 {
     <button class="btn btn-link" @onclick="ResetCount">Reset count in last window to new value</button>
 }
