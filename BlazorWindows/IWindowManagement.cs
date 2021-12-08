@@ -7,6 +7,9 @@ namespace KST.Blazor.Windows
 {
 	public interface IWindowManagement
 	{
+		IReadOnlyCollection<IWindow> Windows { get; }
+		event EventHandler? WindowsChanged;
+
 		Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase;
 

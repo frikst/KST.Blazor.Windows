@@ -1,0 +1,52 @@
+﻿@page "/windows"
+@implements IDisposable
+@inject IWindowManagement WindowManagement
+
+<h1>Windows</h1>
+
+@if (this.WindowManagement.Windows.Any())
+{
+    <table class="table table-striped">
+        <thead class="thead-light">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Component type</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var window in this.WindowManagement.Windows)
+            {
+                <tr>
+                    <td>@window.Id</td>
+                    <td>@window.Title</td>
+                    <td><code>@window.ComponentType.FullName</code></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="alert alert-primary" role="alert">No window opened yet</p>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        this.WindowManagement.WindowsChanged += OnWindowsChanged;
+    }
+
+    private void OnWindowsChanged(object? sender, EventArgs e)
+    {
+        this.StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        this.WindowManagement.WindowsChanged -= OnWindowsChanged;
+    }
+
+}

@@ -22,6 +22,9 @@ namespace KST.Blazor.Windows.Internal
 		public IReadOnlyCollection<WindowImpl> Windows
 			=> this.aWindows.Values;
 
+		IReadOnlyCollection<IWindow> IWindowManagement.Windows
+			=> this.aWindows.Values;
+
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase
 			=> await this.OpenWindow<TComponent>(NewWindowOptions.Empty, null!);

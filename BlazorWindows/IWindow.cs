@@ -6,18 +6,20 @@ namespace KST.Blazor.Windows
 {
 	public interface IWindow
 	{
-		public Guid Id { get; }
+		Guid Id { get; }
 
-		public string Title { get; }
+		Type ComponentType { get; }
 
-		public bool IsDisposed { get; }
+		string Title { get; }
 
-		public Task ChangeTitle(string title);
+		bool IsDisposed { get; }
+
+		Task ChangeTitle(string title);
 	}
 
 	public interface IWindow<TComponent> : IWindow
 		where TComponent : ComponentBase
 	{
-		public void ChangeParameters(Action<IComponentParameterBag<TComponent>> parameters);
+		void ChangeParameters(Action<IComponentParameterBag<TComponent>> parameters);
 	}
 }
