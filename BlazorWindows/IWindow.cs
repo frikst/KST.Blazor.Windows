@@ -16,5 +16,6 @@ namespace KST.Blazor.Windows
 	public interface IWindow<TComponent> : IWindow
 		where TComponent : ComponentBase
 	{
+		public void ChangeParameters(Action<IComponentParameterBag<TComponent>> parameters);
 	}
 }

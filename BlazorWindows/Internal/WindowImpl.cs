@@ -55,5 +55,10 @@ namespace KST.Blazor.Windows.Internal
 
 		public override Type ComponentType
 			=> typeof(TComponent);
+
+		public void ChangeParameters(Action<IComponentParameterBag<TComponent>> parameters)
+		{
+			((ComponentParameterBag<TComponent>)this.Parameters).Apply(parameters);
+		}
 	}
 }

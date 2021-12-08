@@ -11,6 +11,8 @@ namespace KST.Blazor.Windows
 		public abstract IReadOnlyDictionary<string, object?> BuildParameters();
 
 		public abstract bool IsEmpty { get; }
+
+		public abstract event EventHandler? Changed;
 	}
 
 	public class ComponentParameterBag<TComponent> : ComponentParameterBag, IComponentParameterBag<TComponent>
@@ -22,9 +24,10 @@ namespace KST.Blazor.Windows
 			this.aProperties = new Dictionary<string, object?>();
 		}
 
-		public void Apply(Action<ComponentParameterBag<TComponent>> properties)
+		public void Apply(Action<IComponentParameterBag<TComponent>> properties)
 		{
 			properties(this);
+			this.Changed?.Invoke(this, EventArgs.Empty);
 		}
 
 		public IComponentParameterBag<TComponent> Set<TValue>(Expression<Func<TComponent, TValue>> parameter, TValue value)
@@ -38,5 +41,7 @@ namespace KST.Blazor.Windows
 
 		public override bool IsEmpty
 			=> !this.aProperties.Any();
+
+		public override event EventHandler? Changed;
 	}
 }

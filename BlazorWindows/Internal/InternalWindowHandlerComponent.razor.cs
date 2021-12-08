@@ -8,14 +8,32 @@ namespace KST.Blazor.Windows.Internal
 	public partial class InternalWindowHandlerComponent : ComponentBase
 	{
 		private ElementReference aWindowElementRef;
+		private IWindow aWindow = default!;
 
 		[Inject]
 		public WindowHandlerInterop WindowHandler { get; set; }
 			= default!;
 
 		[Parameter]
-		public IWindow Window { get; set; }
-			= default!;
+		public IWindow Window
+		{
+			get => this.aWindow;
+			set
+			{
+				if (this.aWindow is WindowImpl oldImpl)
+					oldImpl.Parameters.Changed -= this.OnWindowParametersChanged;
+
+				this.aWindow = value;
+
+				if (this.aWindow is WindowImpl newImpl)
+					newImpl.Parameters.Changed += this.OnWindowParametersChanged;
+			}
+		}
+
+		private void OnWindowParametersChanged(object? sender, EventArgs e)
+		{
+			this.StateHasChanged();
+		}
 
 		public void RenderWindowContent(RenderTreeBuilder builder)
 		{
