@@ -5,6 +5,8 @@
 
 <h1>Weather forecast</h1>
 
+<WindowInfo />
+
 <p>This component demonstrates fetching data from a service.</p>
 
 @if (forecasts == null)
@@ -44,7 +46,6 @@ else
 
     [Inject]
     public IWindowManagement WindowManagement { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {

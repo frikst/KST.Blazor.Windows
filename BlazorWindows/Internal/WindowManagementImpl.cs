@@ -7,10 +7,13 @@ namespace KST.Blazor.Windows.Internal
 {
 	internal class WindowManagementImpl : IWindowManagement
 	{
+		private readonly WindowHandlerInterop aWindowHandler;
 		private readonly List<WindowImpl> aWindows;
 
-		public WindowManagementImpl()
+		public WindowManagementImpl(WindowHandlerInterop windowHandler)
 		{
+			this.aWindowHandler = windowHandler;
+
 			this.aWindows = new List<WindowImpl>();
 		}
 
@@ -34,7 +37,7 @@ namespace KST.Blazor.Windows.Internal
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, IReadOnlyDictionary<string, object> parameters)
 			where TComponent : ComponentBase
 		{
-			var newWindow = new WindowImpl<TComponent>(options, parameters);
+			var newWindow = new WindowImpl<TComponent>(this.aWindowHandler, options, parameters);
 			this.aWindows.Add(newWindow);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
 			await newWindow.WaitOpen();

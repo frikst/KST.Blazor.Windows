@@ -46,6 +46,12 @@ namespace KST.Blazor.Windows.Internal
 			}
 		}
 
+		public async Task ChangeWindowTitle(Guid id, string title)
+		{
+			var module = await this.aModule.Value;
+			await module.InvokeVoidAsync("ChangeWindowTitle", id.ToString(), title);
+		}
+
 		public async ValueTask DisposeAsync()
 		{
 			if (this.aModule.IsValueCreated)

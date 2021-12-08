@@ -46,6 +46,10 @@ export function OpenWindow(id, content, windowFeatures, windowTitle) {
     });
 }
 
+export function ChangeWindowTitle(id, title) {
+    windows[id].document.title = title;
+}
+
 function windowClosed(id) {
     delete windows[id];
     if (windowManagement != null) {
