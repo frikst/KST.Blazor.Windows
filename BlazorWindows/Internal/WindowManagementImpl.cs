@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -15,6 +16,8 @@ namespace KST.Blazor.Windows.Internal
 			this.aWindowHandler = windowHandler;
 
 			this.aWindows = new Dictionary<Guid, WindowImpl>();
+
+			this.Screens = Array.Empty<IScreen>();
 		}
 
 		public event EventHandler? WindowsChanged;
@@ -24,6 +27,8 @@ namespace KST.Blazor.Windows.Internal
 
 		IReadOnlyCollection<IWindow> IWindowManagement.Windows
 			=> this.aWindows.Values;
+
+		public IReadOnlyCollection<IScreen> Screens { get; private set; }
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase
@@ -58,6 +63,11 @@ namespace KST.Blazor.Windows.Internal
 			window.OnWindowClosed();
 			this.aWindows.Remove(id);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
+		}
+
+		public void OnScreensChanged(IEnumerable<ScreenImpl> screens)
+		{
+			this.Screens = screens.ToArray();
 		}
 	}
 }

@@ -8,11 +8,11 @@
 {
     <table class="table table-striped">
         <thead class="thead-light">
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Component type</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Component type</th>
+            </tr>
         </thead>
         <tbody>
             @foreach (var window in this.WindowManagement.Windows)
@@ -30,6 +30,28 @@ else
 {
     <p class="alert alert-primary" role="alert">No window opened yet</p>
 }
+
+<h1>Screens</h1>
+
+<table class="table table-striped">
+    <thead class="thead-light">
+        <tr>
+            <th>Position</th>
+            <th>Size</th>
+            <th>Primary</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var screen in this.WindowManagement.Screens)
+        {
+            <tr>
+                <td>@screen.Left, @screen.Top</td>
+                <td>@screen.Width &times; @screen.Height</td>
+                <td>@screen.IsPrimary</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
     protected override void OnInitialized()

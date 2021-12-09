@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -10,6 +11,8 @@ namespace KST.Blazor.Windows.Internal
 	{
 		public class WindowManagementCallbacks
 		{
+			public record ScreenInfo(int Left, int Top, int Width, int Height, bool IsPrimary);
+
 			private readonly WindowManagementImpl aWindowManagement;
 
 			internal WindowManagementCallbacks(WindowManagementImpl windowManagement)
@@ -21,6 +24,12 @@ namespace KST.Blazor.Windows.Internal
 			public void OnWindowClosed(string id)
 			{
 				this.aWindowManagement.OnWindowClosed(Guid.Parse(id));
+			}
+
+			[JSInvokable]
+			public void OnScreensChanged(ScreenInfo[] screens)
+			{
+				this.aWindowManagement.OnScreensChanged(screens.Select(x => new ScreenImpl(x.Left, x.Top, x.Width, x.Height, x.IsPrimary)));
 			}
 		}
 
@@ -50,6 +59,12 @@ namespace KST.Blazor.Windows.Internal
 		{
 			var module = await this.aModule.Value;
 			await module.InvokeVoidAsync("ChangeWindowTitle", id.ToString(), title);
+		}
+
+		public async Task SetMultiScreenWindowPlacement(bool enabled)
+		{
+			var module = await this.aModule.Value;
+			await module.InvokeVoidAsync("SetMultiScreenWindowPlacement", enabled);
 		}
 
 		public async ValueTask DisposeAsync()

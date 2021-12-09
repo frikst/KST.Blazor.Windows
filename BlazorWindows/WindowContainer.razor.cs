@@ -2,12 +2,15 @@
 using System.Threading.Tasks;
 using KST.Blazor.Windows.Internal;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using Microsoft.Extensions.Options;
 
 namespace KST.Blazor.Windows
 {
 	public partial class WindowContainer
 	{
+		[Inject]
+		public IOptions<BlazorWindowOptions> Options { get; set; }
+			= default!;
 
 		[Inject]
 		public IWindowManagement WindowManagement { get; set; }
@@ -31,10 +34,12 @@ namespace KST.Blazor.Windows
 		{
 			await base.OnAfterRenderAsync(firstRender);
 
-			if (firstRender)
+			if (!firstRender)
 				return;
 
 			await this.WindowHandler.AssignWindowManagement(this.WindowManagement);
+
+			await this.WindowHandler.SetMultiScreenWindowPlacement(this.Options.Value.EnableMultiScreenWindowPlacement);
 		}
 
 		private void WindowManagementWindowsChanged(object? sender, EventArgs e)

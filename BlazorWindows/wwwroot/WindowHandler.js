@@ -5,7 +5,14 @@ var eventListeners = [];
 var windowManagement = null;
 
 export function AssignWindowManagement(windowManagementRef) {
-    windowManagement = windowManagementRef;
+    windowManagement = {
+        'OnWindowClosed': async function(id) {
+            await windowManagementRef.invokeMethodAsync("OnWindowClosed", id);
+        },
+        'OnScreensChanged': async function(screens) {
+            await windowManagementRef.invokeMethodAsync("OnScreensChanged", screens);
+        }
+    };
 }
 
 export function OpenWindow(id, content, windowFeatures, windowTitle) {
@@ -50,11 +57,62 @@ export function ChangeWindowTitle(id, title) {
     windows[id].document.title = title;
 }
 
-function windowClosed(id) {
+export async function SetMultiScreenWindowPlacement(enabled) {
+    if (!enabled) {
+        processSingleScreen();
+    } else if ("getScreens" in window) {
+        var denied;
+        try {
+            const { state } = await navigator.permissions.query({ name: "window-placement" });
+            denied = state === "denied";
+        } catch (error) {
+            console.error(error);
+            denied = true;
+        }
+
+        if (denied) {
+            processSingleScreen();
+        } else {
+            const screens = await window.getScreens();
+            processScreens(screens.screens);
+            screens.onscreenschange = function() {
+                processScreens(screens.screens);
+            };
+        }
+    } else {
+        processSingleScreen();
+    }
+}
+
+async function windowClosed(id) {
     delete windows[id];
     if (windowManagement != null) {
-        windowManagement.invokeMethodAsync("OnWindowClosed", id);
+        await windowManagement.OnWindowClosed(id);
     }
+}
+
+function processScreens(screens) {
+    windowManagement.OnScreensChanged(
+        screens.map(screen => ({
+            'Left': screen.availLeft,
+            'Top': screen.availTop,
+            'Width': screen.availWidth,
+            'Height': screen.availHeight,
+            'IsPrimary': screen.isPrimary
+        }))
+    );
+}
+
+function processSingleScreen() {
+    windowManagement.OnScreensChanged([
+        {
+            'Left': 'availLeft' in window.screen ? window.screen.availLeft : 0,
+            'Top': 'availTop' in window.screen ? window.screen.availTop : 0,
+            'Width': window.screen.availWidth,
+            'Height': window.screen.availHeight,
+            'IsPrimary': true
+        }
+    ]);
 }
 
 function customAddEventListener(type, listener, options) {
