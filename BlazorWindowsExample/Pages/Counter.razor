@@ -3,6 +3,7 @@
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
+<p>Last count in child: @aLastChildValue</p>
 
 <WindowInfo />
 
@@ -23,8 +24,12 @@
     public int Start { get; set; }
         = 0;
 
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
     private int currentCount = 0;
     private IWindow<Counter>? aLastWindow =  null;
+    private int aLastChildValue;
 
     protected override void OnParametersSet()
     {
@@ -32,15 +37,17 @@
         this.currentCount = this.Start;
     }
 
-    private void IncrementCount()
+    private async Task IncrementCount()
     {
         currentCount++;
+        await this.ValueChanged.InvokeAsync(currentCount);
     }
 
     private async Task OpenWindow()
     {
         this.aLastWindow = await this.WindowManagement.OpenWindow<Counter>(new NewWindowOptions() { Title = "Counter" }, parameters => parameters
             .Set(p => p.Start, currentCount)
+            .Set(p => p.ValueChanged, OnChildValueChanged)
         );
     }
 
@@ -48,6 +55,7 @@
     {
         this.aLastWindow = await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab with{ Title = "Counter"}, parameters => parameters
             .Set(p => p.Start, currentCount)
+            .Set(p => p.ValueChanged, OnChildValueChanged)
         );
     }
 
@@ -59,5 +67,10 @@
                 .Set(p => p.Start, currentCount)
             );
         }
+    }
+
+    private void OnChildValueChanged(int value)
+    {
+        this.aLastChildValue = value;
     }
 }
