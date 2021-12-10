@@ -1,50 +1,49 @@
-﻿using System.Text;
+﻿using System;
 
 namespace KST.Blazor.Windows.Abstractions
 {
 	public record NewWindowOptions
 	{
-		public static readonly NewWindowOptions AsTab
-			= new NewWindowOptions { aIsTab = true };
-
-		public static readonly NewWindowOptions Empty
+		public static readonly NewWindowOptions Default
 			= new NewWindowOptions();
 
-		private bool aIsTab = false;
-
-		public int? Left { get; init; }
-			= null;
-		public int? Top { get; init; }
-			= null;
-
-		public int? Width { get; init; }
-			= null;
-		public int? Height { get; init; }
-			= null;
+		public WindowPosition InitialPosition { get; init; }
+			= new WindowPositionDefault();
 
 		public string? Title { get; init; }
 			= null;
 
 		public string BuildWindowFeatures()
 		{
-			if (this.aIsTab)
-				return string.Empty;
+			switch (this.InitialPosition)
+			{
+				case WindowPositionAbsolute position:
+					return $"popup=yes, {this.BuildPosition(position.Screen, position.Left, position.Top, position.Width, position.Height)}";
+				case WindowPositionDefault { Screen: null }:
+					return "popup=yes";
+				case WindowPositionDefault position:
+					return $"popup=yes, {this.BuildPosition(position.Screen, 0, 0)}";
+				case WindowPositionInTab:
+					return string.Empty;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(this.InitialPosition));
+			}
+		}
 
-			var builder = new StringBuilder("popup=yes");
+		private string BuildPosition(IScreen? screen, int left, int top, int width, int height)
+		{
+			if (screen is null)
+				return $"left={left}, top={top}, width={width}, height={height}";
+			else
+				return $"left={left + screen.Left}, top={top + screen.Top}, width={width}, height={height}";
+		}
 
-			if (this.Left is int left)
-				builder.Append($", left={left}");
-
-			if (this.Top is int top)
-				builder.Append($", top={top}");
-
-			if (this.Width is int width)
-				builder.Append($", width={width}");
-
-			if (this.Height is int height)
-				builder.Append($", height={height}");
-
-			return builder.ToString();
+		private string BuildPosition(IScreen? screen, int left, int top)
+		{
+			if (screen is null)
+				return $"left={left}, top={top}";
+			else
+				return $"left={left + screen.Left}, top={top + screen.Top}";
 		}
 	}
 }

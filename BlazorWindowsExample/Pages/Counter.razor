@@ -46,7 +46,7 @@
 
     private async Task OpenWindow()
     {
-        this.aLastWindow = await this.WindowManagement.OpenWindow<Counter>(new NewWindowOptions() { Title = "Counter" }, parameters => parameters
+        this.aLastWindow = await this.WindowManagement.OpenWindow<Counter>(new NewWindowOptions { Title = "Counter" }, parameters => parameters
             .Set(p => p.Start, currentCount)
             .Set(p => p.ValueChanged, OnChildValueChanged)
         );
@@ -54,7 +54,7 @@
 
     private async Task OpenTab()
     {
-        this.aLastWindow = await this.WindowManagement.OpenWindow<Counter>(NewWindowOptions.AsTab with{ Title = "Counter"}, parameters => parameters
+        this.aLastWindow = await this.WindowManagement.OpenWindow<Counter>(new NewWindowOptions { Title = "Counter", InitialPosition = new WindowPositionInTab() }, parameters => parameters
             .Set(p => p.Start, currentCount)
             .Set(p => p.ValueChanged, OnChildValueChanged)
         );
