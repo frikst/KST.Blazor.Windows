@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace KST.Blazor.Windows
+namespace KST.Blazor.Windows.Abstractions
 {
 	public record NewWindowOptions
 	{

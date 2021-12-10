@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>KST.Blazor.Windows</RootNamespace>
-    <AssemblyName>KST.Blazor.Windows</AssemblyName>
+    <RootNamespace>KST.Blazor.Windows.Abstractions</RootNamespace>
+    <AssemblyName>KST.Blazor.Windows.Abstractions</AssemblyName>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -15,11 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.12" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BlazorWindows.Abstractions\BlazorWindows.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWindowsExample", "Bla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWindows", "BlazorWindows\BlazorWindows.csproj", "{885962B1-08C2-4FF5-A369-A30C4F285B66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWindows.Abstractions", "BlazorWindows.Abstractions\BlazorWindows.Abstractions.csproj", "{5C568DA8-2E83-48C6-B73F-7AF7D47AB06C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{885962B1-08C2-4FF5-A369-A30C4F285B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{885962B1-08C2-4FF5-A369-A30C4F285B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{885962B1-08C2-4FF5-A369-A30C4F285B66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C568DA8-2E83-48C6-B73F-7AF7D47AB06C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C568DA8-2E83-48C6-B73F-7AF7D47AB06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C568DA8-2E83-48C6-B73F-7AF7D47AB06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C568DA8-2E83-48C6-B73F-7AF7D47AB06C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

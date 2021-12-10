@@ -1,4 +1,6 @@
-﻿namespace KST.Blazor.Windows.Internal
+﻿using KST.Blazor.Windows.Abstractions;
+
+namespace KST.Blazor.Windows.Internal
 {
 	internal class ScreenImpl : IScreen
 	{

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using KST.Blazor.Windows.Abstractions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 

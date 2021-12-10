@@ -1,4 +1,5 @@
-﻿@if (this.CurrentWindow is IWindow window)
+﻿@using KST.Blazor.Windows.Abstractions
+@if (this.CurrentWindow is IWindow window)
 {
     <p>I'm in window with GUID @window.Id</p>
     <p>I'm in window with title @window.Title <button @onclick="ChangeTitle">Change</button></p>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace KST.Blazor.Windows
+namespace KST.Blazor.Windows.Abstractions
 {
 	public interface IWindowManagement
 	{
