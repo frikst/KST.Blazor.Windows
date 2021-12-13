@@ -58,8 +58,41 @@ namespace KST.Blazor.Windows.Internal
 
 			if (this.Window is WindowImpl impl)
 			{
-				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, impl.WindowOptions.BuildWindowFeatures(), impl.WindowOptions.Title);
+				await this.WindowHandler.OpenWindow(impl.Id, this.aWindowElementRef, this.BuildWindowFeatures(impl.WindowOptions.InitialPosition), impl.WindowOptions.Title);
 				impl.AfterOpen();
+			}
+		}
+
+		private string BuildWindowFeatures(WindowPosition initialPosition)
+		{
+			switch (initialPosition)
+			{
+				case WindowPositionAbsolute position:
+					return $"popup=yes, {BuildPositionWithSize(position.Screen, position.Left, position.Top, position.Width, position.Height)}";
+				case WindowPositionDefault { Screen: null }:
+					return "popup=yes";
+				case WindowPositionDefault position:
+					return $"popup=yes, {BuildPosition(position.Screen, 0, 0)}";
+				case WindowPositionInTab:
+					return string.Empty;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(initialPosition));
+			}
+
+			static string BuildPositionWithSize(IScreen? screen, int left, int top, int width, int height)
+			{
+				if (screen is null)
+					return $"left={left}, top={top}, width={width}, height={height}";
+				else
+					return $"left={left + screen.Left}, top={top + screen.Top}, width={width}, height={height}";
+			}
+
+			static string BuildPosition(IScreen? screen, int left, int top)
+			{
+				if (screen is null)
+					return $"left={left}, top={top}";
+				else
+					return $"left={left + screen.Left}, top={top + screen.Top}";
 			}
 		}
 
