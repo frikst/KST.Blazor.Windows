@@ -60,8 +60,8 @@ export function ChangeWindowTitle(id, title) {
 export async function SetMultiScreenWindowPlacement(enabled) {
     if (!enabled) {
         processSingleScreen();
-    } else if ("getScreens" in window) {
-        var denied;
+    } else if ("getScreens" in window || "getScreenDetails" in window) {
+        let denied;
         try {
             const { state } = await navigator.permissions.query({ name: "window-placement" });
             denied = state === "denied";
@@ -73,7 +73,12 @@ export async function SetMultiScreenWindowPlacement(enabled) {
         if (denied) {
             processSingleScreen();
         } else {
-            const screens = await window.getScreens();
+            let screens;
+            if ("getScreenDetails" in window) {
+                screens = await window.getScreens();
+            } else {
+                screens = await window.getScreenDetails();
+            }
             processScreens(screens.screens);
             screens.onscreenschange = function() {
                 processScreens(screens.screens);
