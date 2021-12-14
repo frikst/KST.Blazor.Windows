@@ -75,14 +75,18 @@ export async function SetMultiScreenWindowPlacement(enabled) {
         } else {
             let screens;
             if ("getScreenDetails" in window) {
-                screens = await window.getScreens();
-            } else {
                 screens = await window.getScreenDetails();
+            } else {
+                screens = await window.getScreens();
             }
-            processScreens(screens.screens);
-            screens.onscreenschange = function() {
+            if (Array.isArray(screens)) {
+                processScreens(screens);
+            } else {
                 processScreens(screens.screens);
-            };
+                screens.onscreenschange = function() {
+                    processScreens(screens.screens);
+                };
+            }
         }
     } else {
         processSingleScreen();
@@ -103,7 +107,7 @@ function processScreens(screens) {
             'Top': screen.availTop,
             'Width': screen.availWidth,
             'Height': screen.availHeight,
-            'IsPrimary': screen.isPrimary
+            'IsPrimary': screen.isPrimary ?? screen.primary
         }))
     );
 }
@@ -111,8 +115,8 @@ function processScreens(screens) {
 function processSingleScreen() {
     windowManagement.OnScreensChanged([
         {
-            'Left': 'availLeft' in window.screen ? window.screen.availLeft : 0,
-            'Top': 'availTop' in window.screen ? window.screen.availTop : 0,
+            'Left': window.screen.availLeft ?? 0,
+            'Top': window.screen.availTop ?? 0,
             'Width': window.screen.availWidth,
             'Height': window.screen.availHeight,
             'IsPrimary': true
