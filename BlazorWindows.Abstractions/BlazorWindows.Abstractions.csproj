@@ -9,6 +9,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageId>KST.Blazor.Windows.Abstractions</PackageId>
+    <Authors>Jan Janech</Authors>
+    <Company>Department of Software Technologies, Faculty of Management Science and Informatics, University of Žilina</Company>
+    <Product>KST.Blazor.Windows.Abstractions</Product>
+    <Description>Library adding possibility to open Blazor components in a new window.</Description>
+    <Copyright>© 2021 Department of Software Technologies</Copyright>
+    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/frikst/KST.Blazor.Windows</PackageProjectUrl>
+    <Version>1.0.0-pre20211215</Version>
+    <AssemblyVersion>0.9.9</AssemblyVersion>
+    <FileVersion>0.9.9</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
