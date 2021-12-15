@@ -80,10 +80,14 @@ namespace KST.Blazor.Windows.Internal
 			{
 				case WindowPositionAbsolute position:
 					return $"popup=yes, {BuildPositionWithSize(position.Screen, position.Left, position.Top, position.Width, position.Height)}";
+				case WindowPositionCentered position:
+					return $"popup=yes, {BuildPositionWithSize(position.Screen, (position.Screen!.Width - position.Width) / 2, (position.Screen!.Height - position.Height) / 2, position.Width, position.Height)}";
 				case WindowPositionDefault { Screen: null }:
 					return "popup=yes";
 				case WindowPositionDefault position:
 					return $"popup=yes, {BuildPosition(position.Screen, 0, 0)}";
+				case WindowPositionMaximized position:
+					return $"popup=yes, {BuildPositionWithSize(position.Screen, 0, 0, position.Screen!.Width, position.Screen!.Height)}";
 				case WindowPositionInTab:
 					return string.Empty;
 				default:

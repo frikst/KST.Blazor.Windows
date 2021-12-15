@@ -40,15 +40,21 @@ else
             <th>Position</th>
             <th>Size</th>
             <th>Primary</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var screen in this.WindowManagement.Screens)
         {
+            var scr = screen;
             <tr>
                 <td>@screen.Left, @screen.Top</td>
                 <td>@screen.Width &times; @screen.Height</td>
                 <td>@screen.IsPrimary</td>
+                <td>
+                    <button class="btn btn-secondary" @onclick="() => this.OpenCounter(scr)">Open counter</button>
+                    <button class="btn btn-secondary" @onclick="() => this.OpenCounterCentered(scr)">Open counter centered</button>
+                </td>
             </tr>
         }
     </tbody>
@@ -70,6 +76,16 @@ else
     public void Dispose()
     {
         this.WindowManagement.WindowsChanged -= OnWindowsChanged;
+    }
+
+    private async Task OpenCounter(IScreen screen)
+    {
+        await this.WindowManagement.OpenWindowAsync<Counter>(new NewWindowOptions { Title = "Counter", InitialPosition = new WindowPositionMaximized {Screen = screen}});
+    }
+
+    private async Task OpenCounterCentered(IScreen screen)
+    {
+        await this.WindowManagement.OpenWindowAsync<Counter>(new NewWindowOptions { Title = "Counter", InitialPosition = new WindowPositionCentered(500, 500) { Screen = screen } });
     }
 
 }

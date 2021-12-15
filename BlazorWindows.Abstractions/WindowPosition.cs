@@ -41,4 +41,9 @@
 	/// <param name="Width">Width of the window in screen pixels</param>
 	/// <param name="Height">Height of the window in screen pixels</param>
 	public record WindowPositionCentered(int Width, int Height) : WindowPositionAtScreen;
+
+	/// <summary>
+	/// Window maximized at screen
+	/// </summary>
+	public record WindowPositionMaximized : WindowPositionAtScreen;
 }
