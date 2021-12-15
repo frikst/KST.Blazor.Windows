@@ -1,0 +1,29 @@
+﻿div.multi-screen-window-placement-api-request {
+    top: 0;
+    left: 0;
+    position: fixed;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 3px 4px;
+    width: 100%;
+    z-index: 1000;
+    background: lightyellow;
+    padding: 0.6rem 1.25rem 0.7rem
+}
+
+div.multi-screen-window-placement-api-request button.dismiss {
+    border: none;
+    background: transparent;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+div.multi-screen-window-placement-api-request button.proceed {
+    background: transparent;
+    border-radius: 10px;
+    border: rgba(0, 0, 0, .4) solid 2px;
+    box-shadow: rgba(0, 0, 0, .3) 2px 2px 4px;
+}
+
+div.multi-screen-window-placement-api-request button.proceed:active {
+    transform: scale(0.98);
+}

@@ -1,4 +1,15 @@
-﻿@using KST.Blazor.Windows.Internal
+﻿@using Microsoft.AspNetCore.Components.Web
+@using KST.Blazor.Windows.Internal
+
+@if (this.aRequestMultiScreenWindowPlacementPermission)
+{
+    <div class="multi-screen-window-placement-api-request">
+        Permission is needed for the application to be able to enumerate awailable screens.
+        <button class="proceed" @onclick="this.AcceptMultiScreenWindowPlacementPermission">Proceed</button>
+        <button class="dismiss" @onclick="this.DismissMultiScreenWindowPlacementPermission">🗙</button>
+    </div>
+}
+
 <div style="display: none" role="none">
     @if (this.WindowManagement is WindowManagementImpl impl)
     {

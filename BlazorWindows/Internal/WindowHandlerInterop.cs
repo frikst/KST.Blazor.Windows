@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using KST.Blazor.Windows.Abstractions;
 using Microsoft.AspNetCore.Components;
@@ -49,6 +50,26 @@ namespace KST.Blazor.Windows.Internal
 			{
 				this.aWindowManagement.OnScreensChanged(screens.Select(x => new ScreenImpl(x.Left, x.Top, x.Width, x.Height, x.IsPrimary)));
 			}
+		}
+
+		/// <summary>
+		/// Information about API availability
+		/// </summary>
+		[JsonConverter(typeof(JsonStringEnumConverter))]
+		public enum FeatureStatus
+		{
+			/// <summary>
+			/// An API is not available in the current configuration
+			/// </summary>
+			NotPossible,
+			/// <summary>
+			/// An API is available in the current configuration, but not allowed by user yet
+			/// </summary>
+			Possible,
+			/// <summary>
+			/// An API is available in the current configuration
+			/// </summary>
+			Allowed
 		}
 
 		private readonly Lazy<Task<IJSObjectReference>> aModule;
@@ -101,8 +122,17 @@ namespace KST.Blazor.Windows.Internal
 		}
 
 		/// <summary>
+		/// Returns information about multi-screen window placement API availability
+		/// </summary>
+		/// <returns></returns>
+		public async Task<FeatureStatus> GetMultiScreenWindowPlacementStatusAsync()
+		{
+			var module = await this.aModule.Value;
+			return await module.InvokeAsync<FeatureStatus>("GetMultiScreenWindowPlacementStatus");
+		}
+
+		/// <summary>
 		/// Initializes multi-screen window placement API if needed.
-		/// The method could be called only once.
 		/// </summary>
 		/// <param name="enabled">True, if multi-screen window placement API should be enabled</param>
 		public async Task SetMultiScreenWindowPlacementAsync(bool enabled)

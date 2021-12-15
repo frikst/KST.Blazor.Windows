@@ -12,6 +12,8 @@ namespace KST.Blazor.Windows
 	/// </summary>
 	public partial class WindowContainer
 	{
+		private bool aRequestMultiScreenWindowPlacementPermission = false;
+
 		/// <summary>
 		/// Options for the KST.Blazor.Windows library
 		/// </summary>
@@ -54,12 +56,46 @@ namespace KST.Blazor.Windows
 
 			await this.WindowHandler.AssignWindowManagementAsync(this.WindowManagement);
 
-			await this.WindowHandler.SetMultiScreenWindowPlacementAsync(this.Options.Value.EnableMultiScreenWindowPlacement);
+			if (this.Options.Value.EnableMultiScreenWindowPlacement)
+			{
+				var multiScreenWindowPlacementStatus = await this.WindowHandler.GetMultiScreenWindowPlacementStatusAsync();
+
+				if (multiScreenWindowPlacementStatus == WindowHandlerInterop.FeatureStatus.Allowed)
+				{
+					this.aRequestMultiScreenWindowPlacementPermission = false;
+					await this.WindowHandler.SetMultiScreenWindowPlacementAsync(true);
+				}
+				else
+				{
+					await this.WindowHandler.SetMultiScreenWindowPlacementAsync(false);
+
+					if (multiScreenWindowPlacementStatus == WindowHandlerInterop.FeatureStatus.Possible)
+					{
+						this.aRequestMultiScreenWindowPlacementPermission = true;
+						this.StateHasChanged();
+					}
+				}
+			}
+			else
+			{
+				await this.WindowHandler.SetMultiScreenWindowPlacementAsync(false);
+			}
 		}
 
 		private void WindowManagementWindowsChanged(object? sender, EventArgs e)
 		{
 			_ = this.InvokeAsync(this.StateHasChanged);
+		}
+
+		private void DismissMultiScreenWindowPlacementPermission()
+		{
+			this.aRequestMultiScreenWindowPlacementPermission = false;
+		}
+
+		private async Task AcceptMultiScreenWindowPlacementPermission()
+		{
+			this.aRequestMultiScreenWindowPlacementPermission = false;
+			await this.WindowHandler.SetMultiScreenWindowPlacementAsync(true);
 		}
 	}
 }

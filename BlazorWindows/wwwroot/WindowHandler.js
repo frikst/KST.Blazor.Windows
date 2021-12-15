@@ -57,36 +57,44 @@ export function ChangeWindowTitle(id, title) {
     windows[id].document.title = title;
 }
 
-export async function SetMultiScreenWindowPlacement(enabled) {
-    if (!enabled) {
-        processSingleScreen();
-    } else if ("getScreens" in window || "getScreenDetails" in window) {
-        let denied;
+export async function GetMultiScreenWindowPlacementStatus() {
+    if ("getScreens" in window || "getScreenDetails" in window) {
         try {
             const { state } = await navigator.permissions.query({ name: "window-placement" });
-            denied = state === "denied";
+            if (state === "prompt")
+                return "Possible";
+            else if (state === "granted")
+                return "Allowed";
         } catch (error) {
             console.error(error);
-            denied = true;
         }
+    }
 
-        if (denied) {
-            processSingleScreen();
-        } else {
-            let screens;
+    return "NotPossible";
+}
+
+export async function SetMultiScreenWindowPlacement(enabled) {
+    if (enabled) {
+        let screens;
+        try {
             if ("getScreenDetails" in window) {
                 screens = await window.getScreenDetails();
             } else {
                 screens = await window.getScreens();
             }
-            if (Array.isArray(screens)) {
-                processScreens(screens);
-            } else {
+        } catch (error) {
+            console.error(error);
+            processSingleScreen();
+            return;
+        }
+
+        if (Array.isArray(screens)) {
+            processScreens(screens);
+        } else {
+            processScreens(screens.screens);
+            screens.onscreenschange = function() {
                 processScreens(screens.screens);
-                screens.onscreenschange = function() {
-                    processScreens(screens.screens);
-                };
-            }
+            };
         }
     } else {
         processSingleScreen();
