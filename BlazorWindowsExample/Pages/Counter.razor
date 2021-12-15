@@ -62,7 +62,7 @@
 
     private void ResetCount()
     {
-        if (this.aLastWindow is not null)
+        if (this.aLastWindow is not null && !this.aLastWindow.IsDisposed)
         {
             aLastWindow.ChangeParameters(parameters => parameters
                 .Set(p => p.Start, currentCount)
