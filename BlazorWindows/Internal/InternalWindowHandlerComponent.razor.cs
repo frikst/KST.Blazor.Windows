@@ -6,15 +6,25 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace KST.Blazor.Windows.Internal
 {
+	/// <summary>
+	/// Component representing one window in a render tree.
+	/// </summary>
+	/// <remarks>For library internal use only. Should not be instantiated anywhere</remarks>
 	public partial class InternalWindowHandlerComponent : ComponentBase, IDisposable
 	{
 		private ElementReference aWindowElementRef;
 		private IWindow aWindow = default!;
 
+		/// <summary>
+		/// Javascript interop service
+		/// </summary>
 		[Inject]
 		public WindowHandlerInterop WindowHandler { get; set; }
 			= default!;
 
+		/// <summary>
+		/// Window to be managed by the component
+		/// </summary>
 		[Parameter]
 		public IWindow Window
 		{
@@ -36,7 +46,7 @@ namespace KST.Blazor.Windows.Internal
 			this.StateHasChanged();
 		}
 
-		public void RenderWindowContent(RenderTreeBuilder builder)
+		private void RenderWindowContent(RenderTreeBuilder builder)
 		{
 			if (this.Window is WindowImpl impl)
 			{
@@ -49,6 +59,7 @@ namespace KST.Blazor.Windows.Internal
 			}
 		}
 
+		/// <inheritdoc />
 		protected override async Task OnAfterRenderAsync(bool firstRender)
 		{
 			await base.OnAfterRenderAsync(firstRender);
@@ -96,6 +107,7 @@ namespace KST.Blazor.Windows.Internal
 			}
 		}
 
+		/// <inheritdoc />
 		public void Dispose()
 		{
 			if (this.aWindow is WindowImpl oldImpl)

@@ -33,11 +33,11 @@ namespace KST.Blazor.Windows.Internal
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(NewWindowOptions.Default, null!);
+			=> await this.OpenWindow<TComponent>(new NewWindowOptions(), null!);
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(NewWindowOptions.Default, parameters);
+			=> await this.OpenWindow<TComponent>(new NewWindowOptions(), parameters);
 
 		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase

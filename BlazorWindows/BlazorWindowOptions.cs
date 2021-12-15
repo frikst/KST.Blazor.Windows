@@ -1,5 +1,8 @@
 ﻿namespace KST.Blazor.Windows
 {
+	/// <summary>
+	/// Options for KST.Blazor.Windows library
+	/// </summary>
 	public class BlazorWindowOptions
 	{
 		/// <summary>
