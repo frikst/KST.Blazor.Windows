@@ -31,19 +31,19 @@ namespace KST.Blazor.Windows.Internal
 
 		public IReadOnlyCollection<IScreen> Screens { get; private set; }
 
-		public async Task<IWindow<TComponent>> OpenWindow<TComponent>()
+		public async Task<IWindow<TComponent>> OpenWindowAsync<TComponent>()
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(new NewWindowOptions(), null!);
+			=> await this.OpenWindowAsync<TComponent>(new NewWindowOptions(), null!);
 
-		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(Action<IComponentParameterBag<TComponent>> parameters)
+		public async Task<IWindow<TComponent>> OpenWindowAsync<TComponent>(Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(new NewWindowOptions(), parameters);
+			=> await this.OpenWindowAsync<TComponent>(new NewWindowOptions(), parameters);
 
-		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
+		public async Task<IWindow<TComponent>> OpenWindowAsync<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase
-			=> await this.OpenWindow<TComponent>(options, null!);
+			=> await this.OpenWindowAsync<TComponent>(options, null!);
 
-		public async Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, Action<IComponentParameterBag<TComponent>> parameters)
+		public async Task<IWindow<TComponent>> OpenWindowAsync<TComponent>(NewWindowOptions options, Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase
 		{
 			var parameterBag = new ComponentParameterBag<TComponent>();
@@ -54,7 +54,7 @@ namespace KST.Blazor.Windows.Internal
 			var newWindow = new WindowImpl<TComponent>(this.aWindowHandler, options, parameterBag);
 			this.aWindows.Add(newWindow.Id, newWindow);
 			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
-			await newWindow.WaitOpen();
+			await newWindow.WaitOpenAsync();
 			return newWindow;
 		}
 

@@ -28,7 +28,7 @@ namespace KST.Blazor.Windows.Abstractions
 		/// Changes window title to the given one.
 		/// </summary>
 		/// <param name="title">Required window title</param>
-		Task ChangeTitle(string title);
+		Task ChangeTitleAsync(string title);
 
 		/// <summary>
 		/// True if browser window was disposed and cannot be manipulated by user nor by Blazor application.

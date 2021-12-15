@@ -52,9 +52,9 @@ namespace KST.Blazor.Windows
 			if (!firstRender)
 				return;
 
-			await this.WindowHandler.AssignWindowManagement(this.WindowManagement);
+			await this.WindowHandler.AssignWindowManagementAsync(this.WindowManagement);
 
-			await this.WindowHandler.SetMultiScreenWindowPlacement(this.Options.Value.EnableMultiScreenWindowPlacement);
+			await this.WindowHandler.SetMultiScreenWindowPlacementAsync(this.Options.Value.EnableMultiScreenWindowPlacement);
 		}
 
 		private void WindowManagementWindowsChanged(object? sender, EventArgs e)

@@ -69,7 +69,7 @@ namespace KST.Blazor.Windows.Internal
 		/// <param name="bodyElementRef">Reference to the element that should be shown as a window content</param>
 		/// <param name="windowFeatures">Window features string</param>
 		/// <param name="windowTitle">Initial window title</param>
-		public async Task OpenWindow(Guid id, ElementReference bodyElementRef, string windowFeatures, string? windowTitle)
+		public async Task OpenWindowAsync(Guid id, ElementReference bodyElementRef, string windowFeatures, string? windowTitle)
 		{
 			var module = await this.aModule.Value;
 			await module.InvokeVoidAsync("OpenWindow", id.ToString(), bodyElementRef, windowFeatures, windowTitle);
@@ -80,7 +80,7 @@ namespace KST.Blazor.Windows.Internal
 		/// The method could be called only once.
 		/// </summary>
 		/// <param name="windowManagement"></param>
-		public async Task AssignWindowManagement(IWindowManagement windowManagement)
+		public async Task AssignWindowManagementAsync(IWindowManagement windowManagement)
 		{
 			if (windowManagement is WindowManagementImpl impl)
 			{
@@ -94,7 +94,7 @@ namespace KST.Blazor.Windows.Internal
 		/// </summary>
 		/// <param name="id">Window id</param>
 		/// <param name="title">A new title</param>
-		public async Task ChangeWindowTitle(Guid id, string title)
+		public async Task ChangeWindowTitleAsync(Guid id, string title)
 		{
 			var module = await this.aModule.Value;
 			await module.InvokeVoidAsync("ChangeWindowTitle", id.ToString(), title);
@@ -105,7 +105,7 @@ namespace KST.Blazor.Windows.Internal
 		/// The method could be called only once.
 		/// </summary>
 		/// <param name="enabled">True, if multi-screen window placement API should be enabled</param>
-		public async Task SetMultiScreenWindowPlacement(bool enabled)
+		public async Task SetMultiScreenWindowPlacementAsync(bool enabled)
 		{
 			var module = await this.aModule.Value;
 			await module.InvokeVoidAsync("SetMultiScreenWindowPlacement", enabled);

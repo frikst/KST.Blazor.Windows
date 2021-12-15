@@ -55,11 +55,11 @@ else
 
     private async Task OpenWindow()
     {
-        await this.WindowManagement.OpenWindow<FetchData>(new NewWindowOptions { Title = "Weather" });
+        await this.WindowManagement.OpenWindowAsync<FetchData>(new NewWindowOptions { Title = "Weather" });
     }
 
     private async Task OpenTab()
     {
-        await this.WindowManagement.OpenWindow<FetchData>(new NewWindowOptions { Title = "Weather", InitialPosition = new WindowPositionInTab() });
+        await this.WindowManagement.OpenWindowAsync<FetchData>(new NewWindowOptions { Title = "Weather", InitialPosition = new WindowPositionInTab() });
     }
 }

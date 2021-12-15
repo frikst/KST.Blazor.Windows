@@ -26,12 +26,12 @@ namespace KST.Blazor.Windows.Internal
 
 		public bool IsDisposed { get; private set; }
 
-		public async Task ChangeTitle(string title)
+		public async Task ChangeTitleAsync(string title)
 		{
 			if (this.IsDisposed)
 				throw new InvalidOperationException("Cannot modify title of disposed window");
 
-			await this.aWindowHandler.ChangeWindowTitle(this.Id, title);
+			await this.aWindowHandler.ChangeWindowTitleAsync(this.Id, title);
 			this.Title = title;
 		}
 
@@ -41,7 +41,7 @@ namespace KST.Blazor.Windows.Internal
 
 		public ComponentParameterBag Parameters { get; }
 
-		public Task WaitOpen()
+		public Task WaitOpenAsync()
 			=> this.aOpenTask.Task;
 
 		public void AfterOpen()

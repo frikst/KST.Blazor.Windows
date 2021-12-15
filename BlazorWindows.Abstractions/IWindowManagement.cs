@@ -29,7 +29,7 @@ namespace KST.Blazor.Windows.Abstractions
 		/// </summary>
 		/// <typeparam name="TComponent">Type of blazor component to be shown in new window</typeparam>
 		/// <returns>Reference to the newly opened window</returns>
-		Task<IWindow<TComponent>> OpenWindow<TComponent>()
+		Task<IWindow<TComponent>> OpenWindowAsync<TComponent>()
 			where TComponent : ComponentBase;
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace KST.Blazor.Windows.Abstractions
 		/// <param name="parameters">Parameters to be set in the component</param>
 		/// <typeparam name="TComponent">Type of blazor component to be shown in new window</typeparam>
 		/// <returns>Reference to the newly opened window</returns>
-		Task<IWindow<TComponent>> OpenWindow<TComponent>(Action<IComponentParameterBag<TComponent>> parameters)
+		Task<IWindow<TComponent>> OpenWindowAsync<TComponent>(Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase;
 
 		/// <summary>
@@ -47,7 +47,7 @@ namespace KST.Blazor.Windows.Abstractions
 		/// <param name="options">Initial options for a new window</param>
 		/// <typeparam name="TComponent">Type of blazor component to be shown in new window</typeparam>
 		/// <returns>Reference to the newly opened window</returns>
-		Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options)
+		Task<IWindow<TComponent>> OpenWindowAsync<TComponent>(NewWindowOptions options)
 			where TComponent : ComponentBase;
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace KST.Blazor.Windows.Abstractions
 		/// <param name="parameters">Parameters to be set in the component</param>
 		/// <typeparam name="TComponent">Type of blazor component to be shown in new window</typeparam>
 		/// <returns>Reference to the newly opened window</returns>
-		Task<IWindow<TComponent>> OpenWindow<TComponent>(NewWindowOptions options, Action<IComponentParameterBag<TComponent>> parameters)
+		Task<IWindow<TComponent>> OpenWindowAsync<TComponent>(NewWindowOptions options, Action<IComponentParameterBag<TComponent>> parameters)
 			where TComponent : ComponentBase;
 	}
 }
