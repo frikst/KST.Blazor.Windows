@@ -17,7 +17,7 @@
     <Copyright>© 2021 Department of Software Technologies</Copyright>
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/frikst/KST.Blazor.Windows</PackageProjectUrl>
-    <Version>1.0.0-pre20211215</Version>
+    <Version>1.0.0-pre20211216</Version>
     <AssemblyVersion>0.9.9</AssemblyVersion>
     <FileVersion>0.9.9</FileVersion>
   </PropertyGroup>
