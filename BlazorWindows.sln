@@ -7,7 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWindowsExample", "Bla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWindows", "BlazorWindows\BlazorWindows.csproj", "{885962B1-08C2-4FF5-A369-A30C4F285B66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWindows.Abstractions", "BlazorWindows.Abstractions\BlazorWindows.Abstractions.csproj", "{5C568DA8-2E83-48C6-B73F-7AF7D47AB06C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWindows.Abstractions", "BlazorWindows.Abstractions\BlazorWindows.Abstractions.csproj", "{5C568DA8-2E83-48C6-B73F-7AF7D47AB06C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{998FDD8E-6D6F-48B6-94E4-114B5D566A0D}"
+	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
