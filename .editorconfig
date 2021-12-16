@@ -1,0 +1,13 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*.cs]
+indent_style = tab
+indent_size = 4
+resharper_csharp_alignment_tab_fill_style=use_tabs_only
+
+[*.csproj]
+indent_style = space
+indent_size = 2

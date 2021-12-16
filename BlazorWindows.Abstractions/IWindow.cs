@@ -40,7 +40,7 @@ namespace KST.Blazor.Windows.Abstractions
 		/// True if browser window was disposed and cannot be manipulated by user nor by Blazor application.
 		/// </summary>
 		bool IsDisposed { get; }
-    }
+	}
 
 	/// <summary>
 	/// Represents reference to a browser window
