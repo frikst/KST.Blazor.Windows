@@ -1,7 +1,7 @@
 ﻿@page "/counter"
 @using KST.Blazor.Windows.Abstractions
 
-<h1>Counter</h1>
+<h1 @ref="aElementReference">Counter</h1>
 
 <p>Current count: @currentCount</p>
 <p>Last count in child: @aLastChildValue</p>
@@ -17,9 +17,16 @@
     <button class="btn btn-link" @onclick="ResetCount">Reset count in last window to new value</button>
 }
 
+<br/>
+<button class="btn btn-warning" @onclick="CallTest1">Interop 1</button>
+<button class="btn btn-warning" @onclick="CallTest2">Interop 2</button>
+
 @code {
     [Inject]
     public IWindowManagement WindowManagement { get; set; }
+
+    [Inject]
+    public IJSRuntime JsRuntime { get; set; }
 
     [Parameter]
     public int Start { get; set; }
@@ -31,6 +38,7 @@
     private int currentCount = 0;
     private IWindow<Counter>? aLastWindow =  null;
     private int aLastChildValue;
+    private ElementReference aElementReference;
 
     protected override void OnParametersSet()
     {
@@ -74,4 +82,15 @@
     {
         this.aLastChildValue = value;
     }
+
+    private async Task CallTest1()
+    {
+        await JsRuntime.InvokeVoidAsync("test");
+    }
+
+    private async Task CallTest2()
+    {
+        await JsRuntime.InvokeVoidAsync("testElReference", aElementReference);
+    }
+
 }
