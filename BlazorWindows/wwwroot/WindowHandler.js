@@ -57,6 +57,10 @@ export function ChangeWindowTitle(id, title) {
     windows[id].document.title = title;
 }
 
+export function CloseWindow(id) {
+    windows[id].close();
+}
+
 export async function GetMultiScreenWindowPlacementStatus() {
     if ("getScreens" in window || "getScreenDetails" in window) {
         try {

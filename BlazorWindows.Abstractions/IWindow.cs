@@ -31,10 +31,16 @@ namespace KST.Blazor.Windows.Abstractions
 		Task ChangeTitleAsync(string title);
 
 		/// <summary>
+		/// Closes window
+		/// </summary>
+		/// <returns></returns>
+		Task CloseAsync();
+
+		/// <summary>
 		/// True if browser window was disposed and cannot be manipulated by user nor by Blazor application.
 		/// </summary>
 		bool IsDisposed { get; }
-	}
+    }
 
 	/// <summary>
 	/// Represents reference to a browser window

@@ -24,7 +24,7 @@ namespace KST.Blazor.Windows.Internal
 
 		public string Title { get; private set; }
 
-		public bool IsDisposed { get; private set; }
+        public bool IsDisposed { get; private set; }
 
 		public async Task ChangeTitleAsync(string title)
 		{
@@ -34,6 +34,14 @@ namespace KST.Blazor.Windows.Internal
 			await this.aWindowHandler.ChangeWindowTitleAsync(this.Id, title);
 			this.Title = title;
 		}
+
+        public async Task CloseAsync()
+        {
+			if (this.IsDisposed)
+                throw new InvalidOperationException("Cannot close disposed window");
+
+            await this.aWindowHandler.CloseWindowAsync(this.Id);
+        }
 
 		public abstract Type ComponentType { get; }
 

@@ -122,6 +122,17 @@ namespace KST.Blazor.Windows.Internal
 		}
 
 		/// <summary>
+		/// Closes window
+		/// </summary>
+		/// <param name="id">Window id</param>
+		/// <returns></returns>
+		public async Task CloseWindowAsync(Guid id) 
+        {
+            var module = await this.aModule.Value;
+            await module.InvokeVoidAsync("CloseWindow", id.ToString());
+        }
+
+		/// <summary>
 		/// Returns information about multi-screen window placement API availability
 		/// </summary>
 		/// <returns></returns>
@@ -147,5 +158,5 @@ namespace KST.Blazor.Windows.Internal
 			if (this.aModule.IsValueCreated)
 				await (await this.aModule.Value).DisposeAsync();
 		}
-	}
+    }
 }

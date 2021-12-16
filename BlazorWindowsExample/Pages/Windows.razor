@@ -13,6 +13,7 @@
                 <th>ID</th>
                 <th>Title</th>
                 <th>Component type</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +23,7 @@
                     <td>@window.Id</td>
                     <td>@window.Title</td>
                     <td><code>@window.ComponentType.FullName</code></td>
+                    <td><button @onclick="@window.CloseAsync">Close</button></td>
                 </tr>
             }
         </tbody>
