@@ -1,4 +1,6 @@
 ﻿const originalAddEventListener = document.addEventListener;
+const originalQuerySelector = document.querySelector;
+const blazorElRegex = /^\[_bl_[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}\]$/i;
 
 var windows = {};
 var eventListeners = [];
@@ -148,6 +150,19 @@ function customAddEventListener(type, listener, options) {
     originalAddEventListener(type, listener, options);
 }
 
+function customQuerySelector(selector) {
+    let result = originalQuerySelector.call(this, selector);
+
+    if (result == null && blazorElRegex.test(selector)) {
+        for (let id in windows) {
+            if (windows.hasOwnProperty(id)) {
+                return windows[id].document.querySelector(selector);
+            }
+        }
+    }
+    return result;
+}
+
 function closeAllWindows() {
     for (let id in windows) {
         if (windows.hasOwnProperty(id)) {
@@ -158,6 +173,7 @@ function closeAllWindows() {
 
 export function Init() {
     document.addEventListener = customAddEventListener;
+    document.querySelector = customQuerySelector;
 
     window.addEventListener("unload", closeAllWindows);
 }
