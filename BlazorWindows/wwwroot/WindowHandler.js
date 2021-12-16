@@ -153,14 +153,20 @@ function customAddEventListener(type, listener, options) {
 function customQuerySelector(selector) {
     let result = originalQuerySelector.call(this, selector);
 
-    if (result == null && blazorElRegex.test(selector)) {
+    if (result !== null)
+        return result;
+
+    if (blazorElRegex.test(selector)) {
         for (let id in windows) {
             if (windows.hasOwnProperty(id)) {
-                return windows[id].document.querySelector(selector);
+                let element = windows[id].document.querySelector(selector);
+                if (element !== null)
+                    return element;
             }
         }
     }
-    return result;
+
+    return null;
 }
 
 function closeAllWindows() {
