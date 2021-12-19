@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using KST.Blazor.Windows.Abstractions;
+using KST.Blazor.Windows.Internal.Interop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 

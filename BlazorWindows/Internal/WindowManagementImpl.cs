@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KST.Blazor.Windows.Abstractions;
+using KST.Blazor.Windows.Internal.Interop;
 using Microsoft.AspNetCore.Components;
 
 namespace KST.Blazor.Windows.Internal

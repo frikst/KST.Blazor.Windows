@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using KST.Blazor.Windows.Abstractions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace KST.Blazor.Windows.Internal
+namespace KST.Blazor.Windows.Internal.Interop
 {
 	/// <summary>
 	/// Javascript interop service
@@ -50,26 +49,6 @@ namespace KST.Blazor.Windows.Internal
 			{
 				this.aWindowManagement.OnScreensChanged(screens.Select(x => new ScreenImpl(x.Left, x.Top, x.Width, x.Height, x.IsPrimary)));
 			}
-		}
-
-		/// <summary>
-		/// Information about API availability
-		/// </summary>
-		[JsonConverter(typeof(JsonStringEnumConverter))]
-		public enum FeatureStatus
-		{
-			/// <summary>
-			/// An API is not available in the current configuration
-			/// </summary>
-			NotPossible,
-			/// <summary>
-			/// An API is available in the current configuration, but not allowed by user yet
-			/// </summary>
-			Possible,
-			/// <summary>
-			/// An API is available in the current configuration
-			/// </summary>
-			Allowed
 		}
 
 		private readonly Lazy<Task<IJSObjectReference>> aModule;

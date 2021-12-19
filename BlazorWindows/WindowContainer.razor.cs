@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using KST.Blazor.Windows.Abstractions;
 using KST.Blazor.Windows.Internal;
+using KST.Blazor.Windows.Internal.Interop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 
@@ -60,7 +61,7 @@ namespace KST.Blazor.Windows
 			{
 				var multiScreenWindowPlacementStatus = await this.WindowHandler.GetMultiScreenWindowPlacementStatusAsync();
 
-				if (multiScreenWindowPlacementStatus == WindowHandlerInterop.FeatureStatus.Allowed)
+				if (multiScreenWindowPlacementStatus == FeatureStatus.Allowed)
 				{
 					this.aRequestMultiScreenWindowPlacementPermission = false;
 					await this.WindowHandler.SetMultiScreenWindowPlacementAsync(true);
@@ -69,7 +70,7 @@ namespace KST.Blazor.Windows
 				{
 					await this.WindowHandler.SetMultiScreenWindowPlacementAsync(false);
 
-					if (multiScreenWindowPlacementStatus == WindowHandlerInterop.FeatureStatus.Possible)
+					if (multiScreenWindowPlacementStatus == FeatureStatus.Possible)
 					{
 						this.aRequestMultiScreenWindowPlacementPermission = true;
 						this.StateHasChanged();

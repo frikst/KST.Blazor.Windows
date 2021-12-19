@@ -1,6 +1,7 @@
 ﻿using System;
 using KST.Blazor.Windows.Abstractions;
 using KST.Blazor.Windows.Internal;
+using KST.Blazor.Windows.Internal.Interop;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace KST.Blazor.Windows
