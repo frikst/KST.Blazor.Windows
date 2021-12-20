@@ -1,0 +1,40 @@
+﻿@using System.Reflection
+@using RouteAttribute = Microsoft.AspNetCore.Components.RouteAttribute
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">BlazorServer</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        @foreach (var exampleType in typeof(ExampleAttribute).Assembly.GetTypes().Where(x => x.GetCustomAttribute<ExampleAttribute>() is not null).OrderBy(x => x.FullName))
+        {
+            var url = (exampleType.GetCustomAttribute<RouteAttribute>() ?? throw new Exception("Example component is not a page")).Template;
+            var title = exampleType.GetCustomAttribute<ExampleAttribute>()!.Title;
+
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="@url">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> @title
+                </NavLink>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
