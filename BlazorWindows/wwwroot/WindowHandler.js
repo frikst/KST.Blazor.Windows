@@ -98,20 +98,20 @@ export async function SetMultiScreenWindowPlacement(enabled) {
             }
         } catch (error) {
             console.error(error);
-            processSingleScreen();
+            await processSingleScreen();
             return;
         }
 
         if (Array.isArray(screens)) {
-            processScreens(screens);
+            await processScreens(screens);
         } else {
-            processScreens(screens.screens);
-            screens.onscreenschange = function() {
-                processScreens(screens.screens);
+            await processScreens(screens.screens);
+            screens.onscreenschange = async function() {
+                await processScreens(screens.screens);
             };
         }
     } else {
-        processSingleScreen();
+        await processSingleScreen();
     }
 }
 
@@ -143,9 +143,9 @@ async function windowClosed(id) {
     }
 }
 
-function processScreens(screens) {
+async function processScreens(screens) {
     if (windowManagement != null) {
-        windowManagement.OnScreensChanged(
+        await windowManagement.OnScreensChanged(
             screens.map(screen => ({
                 'Left': screen.availLeft,
                 'Top': screen.availTop,
@@ -157,9 +157,9 @@ function processScreens(screens) {
     }
 }
 
-function processSingleScreen() {
+async function processSingleScreen() {
     if (windowManagement != null) {
-        windowManagement.OnScreensChanged([
+        await windowManagement.OnScreensChanged([
             {
                 'Left': window.screen.availLeft ?? 0,
                 'Top': window.screen.availTop ?? 0,
