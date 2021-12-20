@@ -144,27 +144,31 @@ async function windowClosed(id) {
 }
 
 function processScreens(screens) {
-    windowManagement.OnScreensChanged(
-        screens.map(screen => ({
-            'Left': screen.availLeft,
-            'Top': screen.availTop,
-            'Width': screen.availWidth,
-            'Height': screen.availHeight,
-            'IsPrimary': screen.isPrimary ?? screen.primary
-        }))
-    );
+    if (windowManagement != null) {
+        windowManagement.OnScreensChanged(
+            screens.map(screen => ({
+                'Left': screen.availLeft,
+                'Top': screen.availTop,
+                'Width': screen.availWidth,
+                'Height': screen.availHeight,
+                'IsPrimary': screen.isPrimary ?? screen.primary
+            }))
+        );
+    }
 }
 
 function processSingleScreen() {
-    windowManagement.OnScreensChanged([
-        {
-            'Left': window.screen.availLeft ?? 0,
-            'Top': window.screen.availTop ?? 0,
-            'Width': window.screen.availWidth,
-            'Height': window.screen.availHeight,
-            'IsPrimary': true
-        }
-    ]);
+    if (windowManagement != null) {
+        windowManagement.OnScreensChanged([
+            {
+                'Left': window.screen.availLeft ?? 0,
+                'Top': window.screen.availTop ?? 0,
+                'Width': window.screen.availWidth,
+                'Height': window.screen.availHeight,
+                'IsPrimary': true
+            }
+        ]);
+    }
 }
 
 function customAddEventListener(type, listener, options) {
