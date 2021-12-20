@@ -1,0 +1,14 @@
+﻿@page "/open-window"
+@attribute [Example("Open a new window")]
+@inject IWindowManagement WindowManagement
+
+<h3>Open a new window</h3>
+
+<button class="btn btn-primary" @onclick="this.OpenNewWindow">Open window</button>
+
+@code {
+    private async Task OpenNewWindow()
+    {
+        await this.WindowManagement.OpenWindowAsync<OpenWindow>();
+    }
+}

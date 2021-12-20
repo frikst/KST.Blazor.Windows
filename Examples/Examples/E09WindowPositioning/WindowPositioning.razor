@@ -1,0 +1,53 @@
+﻿@page "/window-positioning"
+@attribute [Example("Window positioning")]
+@inject IWindowManagement WindowManagement
+
+<h3>Window positioning</h3>
+
+<label for="screen">Select screen:</label>
+<select id="screen" @bind="this.aSelectedScreen">
+    <option value="-1"><i>(null)</i></option>
+    @{ var screenId = 0;}
+    @foreach (var screen in this.WindowManagement.Screens)
+    {
+        <option value="@screenId">
+            @screen.Left, @screen.Top @screen.Width &times; @screen.Height
+        </option>
+        screenId++;
+    }
+</select>
+<br />
+<label for="position">Select position:</label>
+<select id="position" @bind="this.aSelectedPosition">
+    @{ var positionId = 0;}
+    @foreach (var position in this.aPosiblePositions)
+    {
+        <option value="@positionId">
+            @position
+        </option>
+        positionId++;
+    }
+</select>
+<br />
+<button class="btn btn-primary" @onclick="this.OpenWindow">Open new window</button>
+
+@code {
+    private int aSelectedScreen = -1;
+    private int aSelectedPosition = 0;
+
+    private WindowPositionAtScreen[] aPosiblePositions = {
+        new WindowPositionDefault(),
+        new WindowPositionAbsolute(100, 100, 200, 200),
+        new WindowPositionCentered(200, 200),
+        new WindowPositionMaximized()
+    };
+
+    private async Task OpenWindow()
+    {
+        var position = this.aPosiblePositions[this.aSelectedPosition];
+        if (this.aSelectedScreen >= 0)
+            position = position with{Screen = this.WindowManagement.Screens.ElementAt(this.aSelectedScreen)};
+        await this.WindowManagement.OpenWindowAsync<WindowPositioning>(new NewWindowOptions { InitialPosition = position });
+    }
+
+}

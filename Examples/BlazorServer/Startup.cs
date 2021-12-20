@@ -1,4 +1,3 @@
-using KST.Blazor.Windows.Examples.BlazorServer.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +21,6 @@ namespace KST.Blazor.Windows.Examples.BlazorServer
 		{
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
-			services.AddSingleton<WeatherForecastService>();
 
 			services.AddBlazorWindows(cfg =>
 			{

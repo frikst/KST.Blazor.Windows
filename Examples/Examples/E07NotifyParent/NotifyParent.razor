@@ -1,0 +1,28 @@
+﻿@page "/notify-parent"
+@attribute [Example("Parent notifications")]
+@inject IWindowManagement WindowManagement
+
+<p>Current count: @this.aCurrentCount</p>
+
+<button class="btn btn-primary" @onclick="this.IncrementCount">Increment count in a parent window</button>
+<button class="btn btn-secondary" @onclick="this.OpenWindow">Open</button>
+
+@code {
+    private int aCurrentCount = 0;
+
+    [Parameter]
+    public EventCallback Increase { get; set; }
+
+    private async Task IncrementCount()
+    {
+        await this.Increase.InvokeAsync();
+    }
+
+    private async Task OpenWindow()
+    {
+        await this.WindowManagement.OpenWindowAsync<NotifyParent>(parameters => parameters
+            .Set(x => x.Increase, () => this.aCurrentCount++)
+        );
+    }
+
+}

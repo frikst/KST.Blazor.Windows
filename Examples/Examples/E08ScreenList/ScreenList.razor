@@ -1,0 +1,24 @@
+﻿@page "/screen-list"
+@attribute [Example("Screen list")]
+@inject IWindowManagement WindowManagement
+
+<h3>Screen list</h3>
+<table class="table table-striped">
+    <thead class="thead-light">
+    <tr>
+        <th>Position</th>
+        <th>Size</th>
+        <th>Primary</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var screen in this.WindowManagement.Screens)
+    {
+        <tr>
+            <td>@screen.Left, @screen.Top</td>
+            <td>@screen.Width &times; @screen.Height</td>
+            <td>@screen.IsPrimary</td>
+        </tr>
+    }
+    </tbody>
+</table>

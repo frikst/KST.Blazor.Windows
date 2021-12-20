@@ -1,0 +1,14 @@
+﻿@page "/open-tab"
+@attribute [Example("Open a new tab")]
+@inject IWindowManagement WindowManagement
+
+<h3>Open a new tab</h3>
+
+<button class="btn btn-primary" @onclick="this.OpenNewTab">Open in a new tab</button>
+
+@code {
+    private async Task OpenNewTab()
+    {
+        await this.WindowManagement.OpenWindowAsync<OpenTab>(new NewWindowOptions { InitialPosition = new WindowPositionInTab() });
+    }
+}

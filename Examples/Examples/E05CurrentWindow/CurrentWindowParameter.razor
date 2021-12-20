@@ -1,0 +1,39 @@
+﻿@page "/window-info"
+@attribute [Example("Current window info")]
+@inject IWindowManagement WindowManagement
+
+<h3>Current window info</h3>
+
+@if (this.CurrentWindow is IWindow window)
+{
+    <p>I'm in window:</p>
+    <table class="table">
+        <tr>
+            <th role="rowheader">GUID</th>
+            <td>@window.Id</td>
+        </tr>
+        <tr>
+            <th role="rowheader">Title</th>
+            <td>@window.Title</td>
+        </tr>
+    </table>
+}
+else
+{
+    <p class="alert alert-primary" role="alert">Primary window</p>
+}
+
+<button class="btn btn-primary" @onclick="this.OpenNewWindow">Open new window</button>
+
+
+@code {
+
+    [CascadingParameter]
+    public IWindow? CurrentWindow { get; set; }
+
+    private async Task OpenNewWindow()
+    {
+        await this.WindowManagement.OpenWindowAsync<CurrentWindowParameter>(new NewWindowOptions { Title = "Window info" });
+    }
+
+}

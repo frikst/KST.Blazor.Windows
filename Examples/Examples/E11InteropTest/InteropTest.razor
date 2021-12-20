@@ -1,0 +1,35 @@
+﻿@page "/interop-test"
+@using Microsoft.JSInterop
+@using System.Reflection
+@attribute [Example("Interop test")]
+@inject IWindowManagement WindowManagement
+@inject IJSRuntime jsRuntime
+
+<h3 @ref="this.aElementReference">Counter</h3>
+
+<button class="btn btn-primary" @onclick="this.OpenWindow">Open window</button>
+<button class="btn btn-warning" @onclick="this.DoInteropTest">Interop test</button>
+
+@code {
+
+    private ElementReference aElementReference;
+    private IJSObjectReference aModule = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        this.aModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", $"/_content/{Assembly.GetExecutingAssembly().GetName().Name}/E11InteropTest/scripts.js");
+    }
+
+    private async Task OpenWindow()
+    {
+        await this.WindowManagement.OpenWindowAsync<InteropTest>();
+    }
+
+    private async Task DoInteropTest()
+    {
+        await this.aModule.InvokeVoidAsync("TestElReference", aElementReference);
+    }
+
+}

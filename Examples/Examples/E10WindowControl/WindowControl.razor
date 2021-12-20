@@ -1,0 +1,46 @@
+﻿@page "/window-control"
+@implements IDisposable
+@attribute [Example("Window control")]
+@inject IWindowManagement WindowManagement
+
+<h3>Window control</h3>
+
+<label for="window">Select window:</label>
+<select id="window" @bind="this.aSelectedWindow">
+    @{ var windowId = 0;}
+    @foreach (var window in this.WindowManagement.Windows)
+    {
+        <option value="@windowId">
+            @window.Id | @window.Title
+        </option>
+        windowId++;
+    }
+</select>
+<br />
+<button class="btn btn-primary" @onclick="this.CloseWindow">Close window</button>
+
+@code {
+    private int aSelectedWindow;
+
+    private async Task CloseWindow()
+    {
+        await this.WindowManagement.Windows.ElementAt(this.aSelectedWindow).CloseAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        this.WindowManagement.WindowsChanged += OnWindowsChanged;
+    }
+
+    private void OnWindowsChanged(object? sender, EventArgs e)
+    {
+        this.StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        this.WindowManagement.WindowsChanged -= OnWindowsChanged;
+    }
+}

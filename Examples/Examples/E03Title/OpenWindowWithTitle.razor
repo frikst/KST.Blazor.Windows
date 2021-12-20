@@ -1,0 +1,34 @@
+﻿@page "/open-with-title"
+@attribute [Example("Specify window title")]
+@inject IWindowManagement WindowManagement
+
+<h3>Specify window title</h3>
+
+<label>Window title:</label>
+<input @bind="this.aWindowTitle" type="text"/>
+<br />
+
+<button class="btn btn-primary" @onclick="this.OpenWithTitle">Open new window</button>
+@if (this.aLastWindow is not null && !this.aLastWindow.IsDisposed)
+{
+    <button class="btn btn-secondary" @onclick="this.ChangeTitle">Change title</button>
+}
+
+@code {
+    private string aWindowTitle = string.Empty;
+    private IWindow<OpenWindowWithTitle>? aLastWindow;
+
+    private async Task OpenWithTitle()
+    {
+        this.aLastWindow = await this.WindowManagement.OpenWindowAsync<OpenWindowWithTitle>(new NewWindowOptions { Title = aWindowTitle });
+    }
+
+    private async Task ChangeTitle()
+    {
+        if (this.aLastWindow is not null && !this.aLastWindow.IsDisposed)
+        {
+            await aLastWindow.ChangeTitleAsync(this.aWindowTitle);
+        }
+    }
+
+}

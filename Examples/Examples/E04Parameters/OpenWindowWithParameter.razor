@@ -1,0 +1,46 @@
+﻿@page "/open-with-parameter"
+@attribute [Example("Specify parameter")]
+@inject IWindowManagement WindowManagement
+
+<h3>Specify parameter</h3>
+
+@if (this.Data is not null)
+{
+    <text>Parameter value: @this.Data<br /></text>
+}
+
+<label>Parameter to be set:</label>
+<input @bind="this.aNewParameterValue" type="text" />
+<br />
+
+<button class="btn btn-primary" @onclick="this.OpenWithParameter">Open new window</button>
+@if (this.aLastWindow is not null && !this.aLastWindow.IsDisposed)
+{
+    <button class="btn btn-secondary" @onclick="this.ChangeParameter">Change parameter</button>
+}
+
+@code {
+    private string aNewParameterValue = string.Empty;
+    private IWindow<OpenWindowWithParameter>? aLastWindow;
+
+    [Parameter]
+    public string? Data { get; set; }
+
+    private async Task OpenWithParameter()
+    {
+        this.aLastWindow = await this.WindowManagement.OpenWindowAsync<OpenWindowWithParameter>(parameters => parameters
+            .Set(x => x.Data, this.aNewParameterValue)
+        );
+    }
+
+    private void ChangeParameter()
+    {
+        if (this.aLastWindow is not null && !this.aLastWindow.IsDisposed)
+        {
+            aLastWindow.ChangeParameters(parameters => parameters
+                .Set(x => x.Data, this.aNewParameterValue)
+            );
+        }
+    }
+
+}
