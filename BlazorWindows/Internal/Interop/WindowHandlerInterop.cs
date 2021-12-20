@@ -69,7 +69,7 @@ namespace KST.Blazor.Windows.Internal.Interop
 		/// <param name="bodyElementRef">Reference to the element that should be shown as a window content</param>
 		/// <param name="windowFeatures">Window features string</param>
 		/// <param name="windowTitle">Initial window title</param>
-		public async Task OpenWindowAsync(Guid id, ElementReference bodyElementRef, string windowFeatures, string? windowTitle)
+		public async Task OpenWindowAsync(Guid id, ElementReference bodyElementRef, WindowFeatures windowFeatures, string? windowTitle)
 		{
 			var module = await this.aModule.Value;
 			await module.InvokeVoidAsync("OpenWindow", id.ToString(), bodyElementRef, windowFeatures, windowTitle);

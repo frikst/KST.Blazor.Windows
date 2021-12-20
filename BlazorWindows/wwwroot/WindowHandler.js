@@ -19,11 +19,19 @@ export function AssignWindowManagement(windowManagementRef) {
 
 export function OpenWindow(id, content, windowFeatures, windowTitle) {
     return new Promise(resolve => {
-        let win = window.open("/_content/KST.Blazor.Windows/Window.html", id, windowFeatures);
+        let win = window.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
 
         windows[id] = win;
 
         win.addEventListener("load", () => {
+            if (windowFeatures.width !== null || windowFeatures.height !== null) {
+                let width = windowFeatures.width ?? win.outerWidth;
+                let height = windowFeatures.height ?? win.outerHeight;
+
+                if (win.outerWidth !== width || win.outerHeight !== height)
+                    win.resizeBy(width - win.outerWidth, height - win.outerHeight);
+            }
+
             win.addEventListener("unload", () => windowClosed(id));
 
             if (windowTitle !== null)
@@ -105,6 +113,27 @@ export async function SetMultiScreenWindowPlacement(enabled) {
     } else {
         processSingleScreen();
     }
+}
+
+function buildWindowFeatures(windowFeaturesObject) {
+    if (!windowFeaturesObject.popup)
+        return "";
+
+    let windowFeatures = "popup=yes";
+
+    if (windowFeaturesObject.left !== null)
+        windowFeatures += `, left=${windowFeaturesObject.left}`;
+
+    if (windowFeaturesObject.top !== null)
+        windowFeatures += `, top=${windowFeaturesObject.top}`;
+
+    if (windowFeaturesObject.width !== null)
+        windowFeatures += `, width=${windowFeaturesObject.width}`;
+
+    if (windowFeaturesObject.height !== null)
+        windowFeatures += `, height=${windowFeaturesObject.height}`;
+
+    return windowFeatures;
 }
 
 async function windowClosed(id) {

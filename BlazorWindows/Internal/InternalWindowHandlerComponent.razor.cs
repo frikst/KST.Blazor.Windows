@@ -75,40 +75,32 @@ namespace KST.Blazor.Windows.Internal
 			}
 		}
 
-		private string BuildWindowFeatures(WindowPosition initialPosition)
+		private WindowFeatures BuildWindowFeatures(WindowPosition initialPosition)
 		{
 			switch (initialPosition)
 			{
 				case WindowPositionAbsolute position:
-					return $"popup=yes, {BuildPositionWithSize(position.Screen, position.Left, position.Top, position.Width, position.Height)}";
+					return BuildPosition(position.Screen, position.Left, position.Top, position.Width, position.Height);
 				case WindowPositionCentered position:
-					return $"popup=yes, {BuildPositionWithSize(position.Screen, (position.Screen!.Width - position.Width) / 2, (position.Screen!.Height - position.Height) / 2, position.Width, position.Height)}";
+					return BuildPosition(position.Screen, (position.Screen!.Width - position.Width) / 2, (position.Screen!.Height - position.Height) / 2, position.Width, position.Height);
 				case WindowPositionDefault { Screen: null }:
-					return "popup=yes";
+					return new WindowFeatures(true);
 				case WindowPositionDefault position:
-					return $"popup=yes, {BuildPosition(position.Screen, 0, 0)}";
+					return BuildPosition(position.Screen, 0, 0);
 				case WindowPositionMaximized position:
-					return $"popup=yes, {BuildPositionWithSize(position.Screen, 0, 0, position.Screen!.Width, position.Screen!.Height)}";
+					return BuildPosition(position.Screen, 0, 0, position.Screen!.Width, position.Screen!.Height);
 				case WindowPositionInTab:
-					return string.Empty;
+					return new WindowFeatures(false);
 				default:
 					throw new ArgumentOutOfRangeException(nameof(initialPosition));
 			}
 
-			static string BuildPositionWithSize(IScreen? screen, int left, int top, int width, int height)
+			static WindowFeatures BuildPosition(IScreen? screen, int left, int top, int? width = null, int? height = null)
 			{
 				if (screen is null)
-					return $"left={left}, top={top}, width={width}, height={height}";
+					return new WindowFeatures(true, left, top, width, height);
 				else
-					return $"left={left + screen.Left}, top={top + screen.Top}, width={width}, height={height}";
-			}
-
-			static string BuildPosition(IScreen? screen, int left, int top)
-			{
-				if (screen is null)
-					return $"left={left}, top={top}";
-				else
-					return $"left={left + screen.Left}, top={top + screen.Top}";
+					return new WindowFeatures(true, left + screen.Left, top + screen.Top, width, height);
 			}
 		}
 

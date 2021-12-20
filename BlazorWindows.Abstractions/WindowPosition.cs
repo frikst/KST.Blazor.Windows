@@ -31,15 +31,15 @@
 	/// </summary>
 	/// <param name="Left">Left position of the window in screen pixels</param>
 	/// <param name="Top">Top position of the window in screen pixels</param>
-	/// <param name="Width">Width of the window in screen pixels</param>
-	/// <param name="Height">Height of the window in screen pixels</param>
+	/// <param name="Width">Outer width of the window in screen pixels</param>
+	/// <param name="Height">Outer height of the window in screen pixels</param>
 	public record WindowPositionAbsolute(int Left, int Top, int Width, int Height) : WindowPositionAtScreen;
 
 	/// <summary>
 	/// Window centered at screen
 	/// </summary>
-	/// <param name="Width">Width of the window in screen pixels</param>
-	/// <param name="Height">Height of the window in screen pixels</param>
+	/// <param name="Width">Outer width of the window in screen pixels</param>
+	/// <param name="Height">Outer height of the window in screen pixels</param>
 	public record WindowPositionCentered(int Width, int Height) : WindowPositionAtScreen;
 
 	/// <summary>
