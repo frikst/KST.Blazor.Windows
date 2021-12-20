@@ -1,24 +1,17 @@
-using BlazorWindowsExample.Data;
+using KST.Blazor.Windows.Examples.BlazorServer.Data;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KST.Blazor.Windows;
 
-namespace BlazorWindowsExample
+namespace KST.Blazor.Windows.Examples.BlazorServer
 {
 	public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
-			Configuration = configuration;
+			this.Configuration = configuration;
 		}
 
 		public IConfiguration Configuration { get; }

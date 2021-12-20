@@ -1,6 +1,6 @@
 using System;
 
-namespace BlazorWindowsExample.Data
+namespace KST.Blazor.Windows.Examples.BlazorServer.Data
 {
 	public class WeatherForecast
 	{
@@ -8,7 +8,7 @@ namespace BlazorWindowsExample.Data
 
 		public int TemperatureC { get; set; }
 
-		public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+		public int TemperatureF => 32 + (int)(this.TemperatureC / 0.5556);
 
 		public string Summary { get; set; }
 	}

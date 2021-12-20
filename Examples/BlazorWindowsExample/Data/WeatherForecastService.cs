@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorWindowsExample.Data
+namespace KST.Blazor.Windows.Examples.BlazorServer.Data
 {
 	public class WeatherForecastService
 	{
