@@ -1,6 +1,6 @@
 ﻿const originalAddEventListener = document.addEventListener;
 const originalQuerySelector = document.querySelector;
-const blazorElRegex = /^\[_bl_[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}\]$/i;
+const blazorElRegex = /^\[_bl_(\w{8}-\w{4}-\w{4}-\w{4}-\w{12}|\d+)\]$/i;
 
 var windows = {};
 var eventListeners = [];
@@ -33,7 +33,7 @@ export function OpenWindow(id, content, windowFeatures, windowTitle) {
             }
 
             win.addEventListener("unload", () => windowClosed(id));
-
+            
             if (windowTitle !== null)
                 win.document.title = windowTitle;
 
