@@ -6,7 +6,11 @@ var windows = {};
 var eventListeners = [];
 var windowManagement = null;
 
+var initialized = false;
+
 export function AssignWindowManagement(windowManagementRef) {
+    checkInitialized();
+
     windowManagement = {
         'OnWindowClosed': async function(id) {
             await windowManagementRef.invokeMethodAsync("OnWindowClosed", id);
@@ -18,6 +22,8 @@ export function AssignWindowManagement(windowManagementRef) {
 }
 
 export function OpenWindow(id, content, windowFeatures, windowTitle) {
+    checkInitialized();
+
     return new Promise(resolve => {
         let win = window.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
 
@@ -64,14 +70,20 @@ export function OpenWindow(id, content, windowFeatures, windowTitle) {
 }
 
 export function ChangeWindowTitle(id, title) {
+    checkInitialized();
+
     windows[id].document.title = title;
 }
 
 export function CloseWindow(id) {
+    checkInitialized();
+
     windows[id].close();
 }
 
 export async function GetMultiScreenWindowPlacementStatus() {
+    checkInitialized();
+
     if ("getScreens" in window || "getScreenDetails" in window) {
         try {
             const { state } = await navigator.permissions.query({ name: "window-placement" });
@@ -88,6 +100,8 @@ export async function GetMultiScreenWindowPlacementStatus() {
 }
 
 export async function SetMultiScreenWindowPlacement(enabled) {
+    checkInitialized();
+
     if (enabled) {
         let screens;
         try {
@@ -210,9 +224,20 @@ function closeAllWindows() {
     }
 }
 
+function checkInitialized() {
+    if (!initialized) {
+        throw new Error("Module WindowHandler.js from KST.Blazor.Windows library was not initialized yet");
+    }
+}
+
 export function Init() {
+    if (initialized) {
+        throw new Error("Module WindowHandler.js from KST.Blazor.Windows library cannot be initialized twice");
+    }
     document.addEventListener = customAddEventListener;
     document.querySelector = customQuerySelector;
 
     window.addEventListener("unload", closeAllWindows);
+
+    initialized = true;
 }
