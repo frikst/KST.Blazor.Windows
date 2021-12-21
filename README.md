@@ -76,3 +76,7 @@ To open a new window, you can just inject `IWindowManager` and use its methods:
     }
 }
 ```
+
+## Examples
+
+More examples can be found in [Examples](Examples/Examples) project.
