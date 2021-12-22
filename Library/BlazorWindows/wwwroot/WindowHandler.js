@@ -21,52 +21,48 @@ export function AssignWindowManagement(windowManagementRef) {
     };
 }
 
-export function OpenWindow(id, content, windowFeatures, windowTitle) {
+export async function OpenWindow(id, content, windowFeatures, windowTitle) {
     checkInitialized();
 
-    return new Promise(resolve => {
-        let win = window.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
+    let win = window.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
 
-        windows[id] = win;
+    windows[id] = win;
 
-        win.addEventListener("load", () => {
-            if (windowFeatures.width !== null || windowFeatures.height !== null) {
-                let width = windowFeatures.width ?? win.outerWidth;
-                let height = windowFeatures.height ?? win.outerHeight;
+    await waitForEvent(win, "load");
 
-                if (win.outerWidth !== width || win.outerHeight !== height)
-                    win.resizeBy(width - win.outerWidth, height - win.outerHeight);
-            }
+    if (windowFeatures.width !== null || windowFeatures.height !== null) {
+        let width = windowFeatures.width ?? win.outerWidth;
+        let height = windowFeatures.height ?? win.outerHeight;
 
-            win.addEventListener("unload", () => windowClosed(id));
-            
-            if (windowTitle !== null)
-                win.document.title = windowTitle;
+        if (win.outerWidth !== width || win.outerHeight !== height)
+            win.resizeBy(width - win.outerWidth, height - win.outerHeight);
+    }
 
-            let baseUrl = new URL(
-                document.head.querySelector("base").getAttribute("href"),
-                document.location.href
-            );
+    win.addEventListener("unload", () => windowClosed(id));
+    
+    if (windowTitle !== null)
+        win.document.title = windowTitle;
 
-            let baseElement = win.document.createElement("base");
-            baseElement.setAttribute("href", baseUrl.href);
-            win.document.head.appendChild(baseElement);
+    let baseUrl = new URL(
+        document.head.querySelector("base").getAttribute("href"),
+        document.location.href
+    );
 
-            document.head
-                .querySelectorAll("link[rel='stylesheet']")
-                .forEach(function(item) {
-                    win.document.head.appendChild(item.cloneNode());
-                });
+    let baseElement = win.document.createElement("base");
+    baseElement.setAttribute("href", baseUrl.href);
+    win.document.head.appendChild(baseElement);
 
-            win.document.body.appendChild(content);
-
-            for (let listener of eventListeners) {
-                win.document.addEventListener(listener[0], listener[1], listener[2]);
-            }
-
-            resolve();
+    document.head
+        .querySelectorAll("link[rel='stylesheet']")
+        .forEach(function(item) {
+            win.document.head.appendChild(item.cloneNode());
         });
-    });
+
+    win.document.body.appendChild(content);
+
+    for (let listener of eventListeners) {
+        win.document.addEventListener(listener[0], listener[1], listener[2]);
+    }
 }
 
 export function ChangeWindowTitle(id, title) {
@@ -222,6 +218,10 @@ function closeAllWindows() {
             windows[id].close();
         }
     }
+}
+
+function waitForEvent(eventTarget, event) {
+    return new Promise(resolve => eventTarget.addEventListener(event, resolve));
 }
 
 function checkInitialized() {
