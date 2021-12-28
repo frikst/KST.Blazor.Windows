@@ -13,14 +13,8 @@ namespace KST.Blazor.Windows.Internal.Interop
 	/// </summary>
 	public class WindowHandlerInterop : IAsyncDisposable
 	{
-		/// <summary>
-		/// Javascript callback functions
-		/// </summary>
-		public class WindowManagementCallbacks
+		private class WindowManagementCallbacks
 		{
-			/// <summary>
-			/// Object used to transfer screen information from javascript
-			/// </summary>
 			public record ScreenInfo(int Left, int Top, int Width, int Height, bool IsPrimary);
 
 			private readonly WindowManagementImpl aWindowManagement;
@@ -30,20 +24,12 @@ namespace KST.Blazor.Windows.Internal.Interop
 				this.aWindowManagement = windowManagement;
 			}
 
-			/// <summary>
-			/// Javascript detected window close
-			/// </summary>
-			/// <param name="id">Window id</param>
 			[JSInvokable]
 			public void OnWindowClosed(string id)
 			{
 				this.aWindowManagement.OnWindowClosed(Guid.Parse(id));
 			}
 
-			/// <summary>
-			/// Javascript detected screen setup changes
-			/// </summary>
-			/// <param name="screens">Modified screen information</param>
 			[JSInvokable]
 			public void OnScreensChanged(ScreenInfo[] screens)
 			{
