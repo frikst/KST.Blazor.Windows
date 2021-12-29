@@ -20,6 +20,7 @@ namespace KST.Blazor.Windows.Internal
 			this.aWindows = new Dictionary<Guid, WindowImpl>();
 
 			this.Screens = Array.Empty<IScreen>();
+			this.ScreenIndex = new Dictionary<string, IScreen>();
 		}
 
 		public event EventHandler? WindowsChanged;
@@ -32,6 +33,8 @@ namespace KST.Blazor.Windows.Internal
 
 		public IReadOnlyCollection<IScreen> Screens { get; private set; }
 
+		public IReadOnlyDictionary<string, IScreen> ScreenIndex { get; private set; }
+		
 		public async Task<IWindow<TComponent>> OpenWindowAsync<TComponent>()
 			where TComponent : ComponentBase
 			=> await this.OpenWindowAsync<TComponent>(new NewWindowOptions(), null!);
@@ -70,6 +73,12 @@ namespace KST.Blazor.Windows.Internal
 		public void OnScreensChanged(IEnumerable<ScreenImpl> screens)
 		{
 			this.Screens = screens.ToArray();
+			this.ScreenIndex = this.Screens.ToDictionary(x => $"{x.Left},{x.Top}");
+		}
+
+		public void OnWindowPositionChanged(Guid id, WindowBoundaries windowBoundaries)
+		{
+			this.aWindows[id].OnWindowPositionChanged(windowBoundaries);
 		}
 	}
 }

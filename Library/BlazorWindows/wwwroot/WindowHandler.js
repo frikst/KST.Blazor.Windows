@@ -17,6 +17,9 @@ export function AssignWindowManagement(windowManagementRef) {
         },
         'OnScreensChanged': async function(screens) {
             await windowManagementRef.invokeMethodAsync("OnScreensChanged", screens);
+        },
+        'OnWindowPositionsChanged': async function(windowPositions) {
+            await windowManagementRef.invokeMethodAsync("OnWindowPositionsChanged", windowPositions);
         }
     };
 }
@@ -26,7 +29,10 @@ export async function OpenWindow(id, content, windowFeatures, windowTitle) {
 
     let win = window.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
 
-    windows[id] = win;
+    windows[id] = {
+        'window': win,
+        'position': null
+    };
 
     await waitForEvent(win, "load");
 
@@ -63,18 +69,22 @@ export async function OpenWindow(id, content, windowFeatures, windowTitle) {
     for (let listener of eventListeners) {
         win.document.addEventListener(listener[0], listener[1], listener[2]);
     }
+
+    await refreshWindowPositions();
+
+    win.addEventListener("resize", refreshWindowPositions);
 }
 
 export function ChangeWindowTitle(id, title) {
     checkInitialized();
 
-    windows[id].document.title = title;
+    windows[id].window.document.title = title;
 }
 
 export function CloseWindow(id) {
     checkInitialized();
 
-    windows[id].close();
+    windows[id].window.close();
 }
 
 export async function GetMultiScreenWindowPlacementStatus() {
@@ -186,7 +196,7 @@ function customAddEventListener(type, listener, options) {
 
     for (let id in windows) {
         if (windows.hasOwnProperty(id)) {
-            windows[id].document.addEventListener(type, listener, options);
+            windows[id].window.document.addEventListener(type, listener, options);
         }
     }
 
@@ -215,7 +225,7 @@ function customQuerySelector(selector) {
 function closeAllWindows() {
     for (let id in windows) {
         if (windows.hasOwnProperty(id)) {
-            windows[id].close();
+            windows[id].window.close();
         }
     }
 }
@@ -224,10 +234,55 @@ function waitForEvent(eventTarget, event) {
     return new Promise(resolve => eventTarget.addEventListener(event, resolve));
 }
 
+async function refreshWindowPositions() {
+    let changes = []
+
+    for (let id in windows) {
+        if (windows.hasOwnProperty(id)) {
+            let win = windows[id];
+            let newPosition = {
+                'left': win.window.screenLeft,
+                'top': win.window.screenTop,
+                'width': win.window.outerWidth,
+                'height': win.window.outerHeight,
+                'innerWidth': win.window.innerWidth,
+                'innerHeight': win.window.innerHeight,
+                'screen': `${win.window.screen.availLeft},${win.window.screen.availTop}`
+            };
+
+            if (!shallowEqual(win.position, newPosition)) {
+                win.position = newPosition;
+
+                changes.push({
+                    'windowId': win.window.name,
+                    ...newPosition
+                });
+            }
+        }
+    }
+
+    if (changes.length > 0) {
+        await windowManagement.OnWindowPositionsChanged(changes);
+    }
+}
+
 function checkInitialized() {
     if (!initialized) {
         throw new Error("Module WindowHandler.js from KST.Blazor.Windows library was not initialized yet");
     }
+}
+
+function shallowEqual(object1, object2) {
+    if (object1 === null || object2 === null)
+        return object1 === object2;
+
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length)
+        return false;
+    
+    return keys1.every(key => object2.hasOwnProperty(key) && object1[key] === object2[key])
 }
 
 export function Init() {
@@ -238,6 +293,8 @@ export function Init() {
     document.querySelector = customQuerySelector;
 
     window.addEventListener("unload", closeAllWindows);
+
+    window.setInterval(refreshWindowPositions, 100);
 
     initialized = true;
 }

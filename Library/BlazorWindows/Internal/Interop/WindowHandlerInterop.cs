@@ -17,6 +17,8 @@ namespace KST.Blazor.Windows.Internal.Interop
 		{
 			public record ScreenInfo(int Left, int Top, int Width, int Height, bool IsPrimary);
 
+			public record WindowPositionInfo(string WindowId, string Screen, int Left, int Top, int Width, int Height, int InnerWidth, int InnerHeight);
+
 			private readonly WindowManagementImpl aWindowManagement;
 
 			internal WindowManagementCallbacks(WindowManagementImpl windowManagement)
@@ -34,6 +36,27 @@ namespace KST.Blazor.Windows.Internal.Interop
 			public void OnScreensChanged(ScreenInfo[] screens)
 			{
 				this.aWindowManagement.OnScreensChanged(screens.Select(x => new ScreenImpl(x.Left, x.Top, x.Width, x.Height, x.IsPrimary)));
+			}
+
+			[JSInvokable]
+			public void OnWindowPositionsChanged(WindowPositionInfo[] windowPositions)
+			{
+				foreach (var windowPosition in windowPositions)
+				{
+					var screen = this.aWindowManagement.ScreenIndex[windowPosition.Screen];
+					this.aWindowManagement.OnWindowPositionChanged(
+						new Guid(windowPosition.WindowId),
+						new WindowBoundaries(
+							screen,
+							windowPosition.Left - screen.Left,
+							windowPosition.Top - screen.Top,
+							windowPosition.Width,
+							windowPosition.Height,
+							windowPosition.InnerWidth,
+							windowPosition.InnerHeight
+						)
+					);
+				}
 			}
 		}
 

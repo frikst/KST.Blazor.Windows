@@ -10,6 +10,7 @@ namespace KST.Blazor.Windows.Internal
 	{
 		private readonly WindowHandlerInterop aWindowHandler;
 		private readonly TaskCompletionSource aOpenTask;
+		private WindowBoundaries? aBoundaries;
 
 		protected WindowImpl(WindowHandlerInterop windowHandler, NewWindowOptions options, ComponentParameterBag parameters)
 		{
@@ -19,11 +20,15 @@ namespace KST.Blazor.Windows.Internal
 			this.Parameters = parameters;
 			this.Title = options.Title ?? string.Empty;
 			this.aOpenTask = new TaskCompletionSource();
+			this.aBoundaries = null;
 		}
 
 		public Guid Id { get; }
 
 		public string Title { get; private set; }
+
+		public WindowBoundaries Boundaries
+			=> this.aBoundaries ?? throw new InvalidOperationException("Boundaries was not set yet. Should not happen.");
 
 		public bool IsDisposed { get; private set; }
 
@@ -61,6 +66,11 @@ namespace KST.Blazor.Windows.Internal
 		public void OnWindowClosed()
 		{
 			this.IsDisposed = true;
+		}
+
+		public void OnWindowPositionChanged(WindowBoundaries windowBoundaries)
+		{
+			this.aBoundaries = windowBoundaries;
 		}
 	}
 

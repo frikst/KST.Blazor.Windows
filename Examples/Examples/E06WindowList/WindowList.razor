@@ -13,6 +13,10 @@
                 <th>ID</th>
                 <th>Title</th>
                 <th>Component type</th>
+                <th>Screen</th>
+                <th>Position</th>
+                <th>Outer size</th>
+                <th>Inner size</th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +26,10 @@
                     <td>@window.Id</td>
                     <td>@window.Title</td>
                     <td><code>@window.ComponentType.FullName</code></td>
+                    <td>@window.Boundaries.Screen.Left, @window.Boundaries.Top</td>
+                    <td>@window.Boundaries.Left, @window.Boundaries.Top</td>
+                    <td>@window.Boundaries.Width &times; @window.Boundaries.Height</td>
+                    <td>@window.Boundaries.InnerWidth &times; @window.Boundaries.InnerHeight</td>
                 </tr>
             }
         </tbody>

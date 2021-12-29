@@ -25,6 +25,11 @@ namespace KST.Blazor.Windows.Abstractions
 		string Title { get; }
 
 		/// <summary>
+		/// Contains outer and inner window size and window position
+		/// </summary>
+		WindowBoundaries Boundaries { get; }
+
+		/// <summary>
 		/// Changes window title to the given one.
 		/// </summary>
 		/// <param name="title">Required window title</param>
