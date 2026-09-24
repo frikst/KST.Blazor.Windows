@@ -32,7 +32,7 @@ dotnet add package KST.Blazor.Windows
 services.AddBlazorWindows();
 ```
 
-In this step, you can choose to enable support for [Multi-Screen Window Placement API](https://webscreens.github.io/window-placement/)
+In this step, you can choose to enable support for the [Window Management API](https://developer.mozilla.org/en-US/docs/Web/API/Window_Management_API)
 in the supported browser:
 ```csharp
 services.AddBlazorWindows(cfg =>
