@@ -6,6 +6,7 @@ var windows = {};
 var eventListeners = [];
 var windowManagement = null;
 var screenDetails = null;
+var lastActiveWindow = window;
 
 var initialized = false;
 
@@ -28,7 +29,11 @@ export function AssignWindowManagement(windowManagementRef) {
 export async function OpenWindow(id, content, windowFeatures, windowTitle) {
     checkInitialized();
 
-    let win = window.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
+    const openingWindow = getOpeningWindow();
+    const win = openingWindow.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
+
+    if (win === null)
+        throw new Error("The browser blocked the new window. Open it directly from a user interaction and allow pop-ups for this site.");
 
     windows[id] = {
         'window': win,
@@ -74,6 +79,17 @@ export async function OpenWindow(id, content, windowFeatures, windowTitle) {
     await refreshWindowPositions();
 
     win.addEventListener("resize", refreshWindowPositions);
+}
+
+function getOpeningWindow() {
+    if (lastActiveWindow !== null && !lastActiveWindow.closed)
+        return lastActiveWindow;
+
+    return window;
+}
+
+function trackActiveWindow(event) {
+    lastActiveWindow = event.currentTarget.defaultView;
 }
 
 export function ChangeWindowTitle(id, title) {
@@ -218,7 +234,7 @@ function customAddEventListener(type, listener, options) {
         }
     }
 
-    originalAddEventListener(type, listener, options);
+    originalAddEventListener.call(this, type, listener, options);
 }
 
 function customQuerySelector(selector) {
@@ -230,7 +246,7 @@ function customQuerySelector(selector) {
     if (blazorElRegex.test(selector)) {
         for (let id in windows) {
             if (windows.hasOwnProperty(id)) {
-                let element = windows[id].document.querySelector(selector);
+                let element = windows[id].window.document.querySelector(selector);
                 if (element !== null)
                     return element;
             }
@@ -342,6 +358,9 @@ export function Init() {
 
     document.addEventListener = customAddEventListener;
     document.querySelector = customQuerySelector;
+
+    document.addEventListener("pointerdown", trackActiveWindow, true);
+    document.addEventListener("keydown", trackActiveWindow, true);
 
     window.addEventListener("unload", closeAllWindows);
 
