@@ -27,6 +27,7 @@ namespace KST.Blazor.Windows.Internal
 		/// Window to be managed by the component
 		/// </summary>
 		[Parameter]
+#pragma warning disable BL0007 // Component parameters should be auto properties
 		public IWindow Window
 		{
 			get => this.aWindow;
@@ -41,6 +42,7 @@ namespace KST.Blazor.Windows.Internal
 					newImpl.Parameters.Changed += this.OnWindowParametersChanged;
 			}
 		}
+#pragma warning restore BL0007 // Component parameters should be auto properties
 
 		private void OnWindowParametersChanged(object? sender, EventArgs e)
 		{
