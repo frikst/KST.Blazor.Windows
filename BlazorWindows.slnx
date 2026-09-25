@@ -1,7 +1,5 @@
 <Solution>
   <Folder Name="/Examples/">
-    <Project Path="Examples/BlazorServer/BlazorServer.csproj" />
-    <Project Path="Examples/BlazorWebAssembly/BlazorWebAssembly.csproj" />
     <Project Path="Examples/Examples/Examples.csproj" />
   </Folder>
   <Folder Name="/Library/">
