@@ -25,11 +25,11 @@ export function AssignWindowManagement(windowManagementRef) {
     };
 }
 
-export async function OpenWindow(id, content, windowFeatures, windowTitle) {
+export async function OpenWindow(id, content, windowPosition, windowTitle) {
     checkInitialized();
 
     const openingWindow = getOpeningWindow();
-    const win = openingWindow.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowFeatures));
+    const win = openingWindow.open("/_content/KST.Blazor.Windows/Window.html", id, buildWindowFeatures(windowPosition));
 
     if (win === null)
         throw new Error("The browser blocked the new window. Open it directly from a user interaction and allow pop-ups for this site.");
@@ -42,9 +42,11 @@ export async function OpenWindow(id, content, windowFeatures, windowTitle) {
 
     await waitForEvent(win, "load");
 
-    if (windowFeatures.width !== null || windowFeatures.height !== null) {
-        let width = windowFeatures.width ?? win.outerWidth;
-        let height = windowFeatures.height ?? win.outerHeight;
+    if ('maximize' in win && windowPosition.positionKind === 'Maximized' && (await GetMultiScreenWindowPlacementStatus()) === 'Allowed') {
+        win.maximize();
+    } else if (windowPosition.width !== null || windowPosition.height !== null) {
+        let width = windowPosition.width ?? win.outerWidth;
+        let height = windowPosition.height ?? win.outerHeight;
 
         if (win.outerWidth !== width || win.outerHeight !== height)
             win.resizeBy(width - win.outerWidth, height - win.outerHeight);
@@ -157,23 +159,23 @@ export async function SetMultiScreenWindowPlacement(enabled) {
     }
 }
 
-function buildWindowFeatures(windowFeaturesObject) {
-    if (!windowFeaturesObject.popup)
+function buildWindowFeatures(windowPositionObject) {
+    if (!windowPositionObject.positionKind === "Tab")
         return "";
 
     let windowFeatures = "popup=yes";
 
-    if (windowFeaturesObject.left !== null)
-        windowFeatures += `, left=${windowFeaturesObject.left}`;
+    if (windowPositionObject.left !== null)
+        windowFeatures += `, left=${windowPositionObject.left}`;
 
-    if (windowFeaturesObject.top !== null)
-        windowFeatures += `, top=${windowFeaturesObject.top}`;
+    if (windowPositionObject.top !== null)
+        windowFeatures += `, top=${windowPositionObject.top}`;
 
-    if (windowFeaturesObject.width !== null)
-        windowFeatures += `, width=${windowFeaturesObject.width}`;
+    if (windowPositionObject.width !== null)
+        windowFeatures += `, width=${windowPositionObject.width}`;
 
-    if (windowFeaturesObject.height !== null)
-        windowFeatures += `, height=${windowFeaturesObject.height}`;
+    if (windowPositionObject.height !== null)
+        windowFeatures += `, height=${windowPositionObject.height}`;
 
     return windowFeatures;
 }

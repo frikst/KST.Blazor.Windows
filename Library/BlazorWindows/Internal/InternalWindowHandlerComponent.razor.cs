@@ -72,12 +72,12 @@ namespace KST.Blazor.Windows.Internal
 
 			if (this.Window is WindowImpl impl)
 			{
-				await this.WindowHandler.OpenWindowAsync(impl.Id, this.aWindowElementRef, this.BuildWindowFeatures(impl.WindowOptions.InitialPosition), impl.WindowOptions.Title);
+				await this.WindowHandler.OpenWindowAsync(impl.Id, this.aWindowElementRef, this.BuildWindowPosition(impl.WindowOptions.InitialPosition), impl.WindowOptions.Title);
 				impl.AfterOpen();
 			}
 		}
 
-		private WindowFeatures BuildWindowFeatures(WindowPosition initialPosition)
+		private WindowPositionInterop BuildWindowPosition(Abstractions.WindowPosition initialPosition)
 		{
 			switch (initialPosition)
 			{
@@ -86,23 +86,23 @@ namespace KST.Blazor.Windows.Internal
 				case WindowPositionCentered position:
 					return BuildPosition(position.Screen, (position.Screen!.Width - position.Width) / 2, (position.Screen!.Height - position.Height) / 2, position.Width, position.Height);
 				case WindowPositionDefault { Screen: null }:
-					return new WindowFeatures(true);
+					return new WindowPositionInterop(WindowPositionKind.Window);
 				case WindowPositionDefault position:
 					return BuildPosition(position.Screen, 0, 0);
 				case WindowPositionMaximized position:
-					return BuildPosition(position.Screen, 0, 0, position.Screen!.Width, position.Screen!.Height);
+					return BuildPosition(position.Screen, 0, 0, position.Screen!.Width, position.Screen!.Height, WindowPositionKind.Maximized);
 				case WindowPositionInTab:
-					return new WindowFeatures(false);
+					return new WindowPositionInterop(WindowPositionKind.Tab);
 				default:
 					throw new ArgumentOutOfRangeException(nameof(initialPosition));
 			}
 
-			static WindowFeatures BuildPosition(IScreen? screen, int left, int top, int? width = null, int? height = null)
+			static WindowPositionInterop BuildPosition(IScreen? screen, int left, int top, int? width = null, int? height = null, WindowPositionKind positionKind = WindowPositionKind.Window)
 			{
 				if (screen is null)
-					return new WindowFeatures(true, left, top, width, height);
+					return new WindowPositionInterop(positionKind, left, top, width, height);
 				else
-					return new WindowFeatures(true, left + screen.Left, top + screen.Top, width, height);
+					return new WindowPositionInterop(positionKind, left + screen.Left, top + screen.Top, width, height);
 			}
 		}
 
