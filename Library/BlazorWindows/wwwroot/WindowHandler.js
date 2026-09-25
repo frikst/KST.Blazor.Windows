@@ -42,7 +42,7 @@ export async function OpenWindow(id, content, windowPosition, windowTitle) {
 
     await waitForEvent(win, "load");
 
-    if ('maximize' in win && windowPosition.positionKind === 'Maximized' && (await GetMultiScreenWindowPlacementStatus()) === 'Allowed') {
+    if ('maximize' in win && windowPosition.positionKind === 'Maximized' && (await GetWindowManagementAPIStatus()) === 'Allowed') {
         win.maximize();
     } else if (windowPosition.width !== null || windowPosition.height !== null) {
         let width = windowPosition.width ?? win.outerWidth;
@@ -104,7 +104,7 @@ export function CloseWindow(id) {
     windows[id].window.close();
 }
 
-export async function GetMultiScreenWindowPlacementStatus() {
+export async function GetWindowManagementAPIStatus() {
     checkInitialized();
 
     if ("getScreens" in window || "getScreenDetails" in window) {
@@ -129,7 +129,7 @@ export async function GetMultiScreenWindowPlacementStatus() {
     return "NotPossible";
 }
 
-export async function SetMultiScreenWindowPlacement(enabled) {
+export async function SetWindowManagementAPI(enabled) {
     checkInitialized();
 
     if (enabled) {

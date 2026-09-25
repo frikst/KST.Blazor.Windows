@@ -121,23 +121,23 @@ namespace KST.Blazor.Windows.Internal.Interop
 		}
 
 		/// <summary>
-		/// Returns information about multi-screen window placement API availability
+		/// Returns information about window management API availability
 		/// </summary>
 		/// <returns></returns>
-		public async Task<FeatureStatus> GetMultiScreenWindowPlacementStatusAsync()
+		public async Task<FeatureStatus> GetWindowManagementAPIStatusAsync()
 		{
 			var module = await this.aModule.Value;
-			return await module.InvokeAsync<FeatureStatus>("GetMultiScreenWindowPlacementStatus");
+			return await module.InvokeAsync<FeatureStatus>("GetWindowManagementAPIStatus");
 		}
 
 		/// <summary>
-		/// Initializes multi-screen window placement API if needed.
+		/// Initializes window management API if needed.
 		/// </summary>
-		/// <param name="enabled">True, if multi-screen window placement API should be enabled</param>
-		public async Task SetMultiScreenWindowPlacementAsync(bool enabled)
+		/// <param name="enabled">True, if window management API should be enabled</param>
+		public async Task SetWindowManagementAPIAsync(bool enabled)
 		{
 			var module = await this.aModule.Value;
-			await module.InvokeVoidAsync("SetMultiScreenWindowPlacement", enabled);
+			await module.InvokeVoidAsync("SetWindowManagementAPI", enabled);
 		}
 
 		/// <inheritdoc />

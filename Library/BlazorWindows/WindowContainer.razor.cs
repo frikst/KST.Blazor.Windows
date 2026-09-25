@@ -13,7 +13,7 @@ namespace KST.Blazor.Windows
 	/// </summary>
 	public partial class WindowContainer
 	{
-		private bool aRequestMultiScreenWindowPlacementPermission = false;
+		private bool aRequestWindowManagementPermission = false;
 
 		/// <summary>
 		/// Options for the KST.Blazor.Windows library
@@ -57,29 +57,29 @@ namespace KST.Blazor.Windows
 
 			await this.WindowHandler.AssignWindowManagementAsync(this.WindowManagement);
 
-			if (this.Options.Value.EnableMultiScreenWindowPlacement)
+			if (this.Options.Value.EnableWindowManagementAPI)
 			{
-				var multiScreenWindowPlacementStatus = await this.WindowHandler.GetMultiScreenWindowPlacementStatusAsync();
+				var windowManagementPersmissionStatus = await this.WindowHandler.GetWindowManagementAPIStatusAsync();
 
-				if (multiScreenWindowPlacementStatus == FeatureStatus.Allowed)
+				if (windowManagementPersmissionStatus == FeatureStatus.Allowed)
 				{
-					this.aRequestMultiScreenWindowPlacementPermission = false;
-					await this.WindowHandler.SetMultiScreenWindowPlacementAsync(true);
+					this.aRequestWindowManagementPermission = false;
+					await this.WindowHandler.SetWindowManagementAPIAsync(true);
 				}
 				else
 				{
-					await this.WindowHandler.SetMultiScreenWindowPlacementAsync(false);
+					await this.WindowHandler.SetWindowManagementAPIAsync(false);
 
-					if (multiScreenWindowPlacementStatus == FeatureStatus.Possible)
+					if (windowManagementPersmissionStatus == FeatureStatus.Possible)
 					{
-						this.aRequestMultiScreenWindowPlacementPermission = true;
+						this.aRequestWindowManagementPermission = true;
 						this.StateHasChanged();
 					}
 				}
 			}
 			else
 			{
-				await this.WindowHandler.SetMultiScreenWindowPlacementAsync(false);
+				await this.WindowHandler.SetWindowManagementAPIAsync(false);
 			}
 		}
 
@@ -88,15 +88,15 @@ namespace KST.Blazor.Windows
 			_ = this.InvokeAsync(this.StateHasChanged);
 		}
 
-		private void DismissMultiScreenWindowPlacementPermission()
+		private void DismissWindowManagementAPIPermission()
 		{
-			this.aRequestMultiScreenWindowPlacementPermission = false;
+			this.aRequestWindowManagementPermission = false;
 		}
 
-		private async Task AcceptMultiScreenWindowPlacementPermission()
+		private async Task AcceptWindowManagementAPIPermission()
 		{
-			this.aRequestMultiScreenWindowPlacementPermission = false;
-			await this.WindowHandler.SetMultiScreenWindowPlacementAsync(true);
+			this.aRequestWindowManagementPermission = false;
+			await this.WindowHandler.SetWindowManagementAPIAsync(true);
 		}
 	}
 }

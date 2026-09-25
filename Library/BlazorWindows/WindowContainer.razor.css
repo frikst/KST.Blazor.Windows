@@ -1,4 +1,4 @@
-﻿div.multi-screen-window-placement-api-request {
+﻿div.window-management-api-request {
     top: 0;
     left: 0;
     position: fixed;
@@ -9,7 +9,7 @@
     padding: 0.6rem 1.25rem 0.7rem
 }
 
-div.multi-screen-window-placement-api-request button.dismiss {
+div.window-management-api-request button.dismiss {
     border: none;
     background: transparent;
     position: absolute;
@@ -17,13 +17,13 @@ div.multi-screen-window-placement-api-request button.dismiss {
     top: 0.5rem;
 }
 
-div.multi-screen-window-placement-api-request button.proceed {
+div.window-management-api-request button.proceed {
     background: transparent;
     border-radius: 10px;
     border: rgba(0, 0, 0, .4) solid 2px;
     box-shadow: rgba(0, 0, 0, .3) 2px 2px 4px;
 }
 
-div.multi-screen-window-placement-api-request button.proceed:active {
+div.window-management-api-request button.proceed:active {
     transform: scale(0.98);
 }

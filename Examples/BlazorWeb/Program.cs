@@ -9,7 +9,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddBlazorWindows(x =>
 {
-	x.EnableMultiScreenWindowPlacement = true;
+	x.EnableWindowManagementAPI = true;
 });
 
 var app = builder.Build();

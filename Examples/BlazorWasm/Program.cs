@@ -11,7 +11,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddBlazorWindows(x =>
 {
-	x.EnableMultiScreenWindowPlacement = true;
+	x.EnableWindowManagementAPI = true;
 });
 
 await builder.Build().RunAsync();
