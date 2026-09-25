@@ -62,12 +62,15 @@ namespace KST.Blazor.Windows.Internal
 			return newWindow;
 		}
 
-		public void OnWindowClosed(Guid id)
+		public void OnWindowClosed(IEnumerable<Guid> ids)
 		{
-			var window = this.aWindows[id];
-			window.OnWindowClosed();
-			this.aWindows.Remove(id);
-			this.WindowsChanged?.Invoke(this, EventArgs.Empty);
+			foreach (var id in ids)
+			{
+				var window = this.aWindows[id];
+				window.OnWindowClosed();
+				this.aWindows.Remove(id);
+				this.WindowsChanged?.Invoke(this, EventArgs.Empty);
+			}
 		}
 
 		public void OnScreensChanged(IEnumerable<ScreenImpl> screens)

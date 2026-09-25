@@ -13,8 +13,8 @@ export function AssignWindowManagement(windowManagementRef) {
     checkInitialized();
 
     windowManagement = {
-        'OnWindowClosed': async function(id) {
-            await windowManagementRef.invokeMethodAsync("OnWindowClosed", id);
+        'OnWindowClosed': async function (ids) {
+            await windowManagementRef.invokeMethodAsync("OnWindowClosed", ids);
         },
         'OnScreensChanged': async function(screens) {
             await windowManagementRef.invokeMethodAsync("OnScreensChanged", screens);
@@ -36,6 +36,7 @@ export async function OpenWindow(id, content, windowFeatures, windowTitle) {
 
     windows[id] = {
         'window': win,
+        'id': id,
         'position': null
     };
 
@@ -49,8 +50,6 @@ export async function OpenWindow(id, content, windowFeatures, windowTitle) {
             win.resizeBy(width - win.outerWidth, height - win.outerHeight);
     }
 
-    win.addEventListener("unload", () => windowClosed(id));
-    
     if (windowTitle !== null)
         win.document.title = windowTitle;
 
@@ -179,13 +178,6 @@ function buildWindowFeatures(windowFeaturesObject) {
     return windowFeatures;
 }
 
-async function windowClosed(id) {
-    delete windows[id];
-    if (windowManagement != null) {
-        await windowManagement.OnWindowClosed(id);
-    }
-}
-
 async function processScreens(screens) {
     if (windowManagement != null) {
         await windowManagement.OnScreensChanged(
@@ -258,34 +250,50 @@ function waitForEvent(eventTarget, event) {
 }
 
 async function refreshWindowPositions() {
-    let changes = []
+    let changes = [];
+    let closedWindows = [];
 
-    for (let id in windows) {
+    for (const id in windows) {
         if (windows.hasOwnProperty(id)) {
             let win = windows[id];
-            let newPosition = {
-                'left': win.window.screenLeft,
-                'top': win.window.screenTop,
-                'width': win.window.outerWidth,
-                'height': win.window.outerHeight,
-                'innerWidth': win.window.innerWidth,
-                'innerHeight': win.window.innerHeight,
-                'screen': `${win.window.screen.availLeft},${win.window.screen.availTop}`
-            };
 
-            if (!shallowEqual(win.position, newPosition)) {
-                win.position = newPosition;
+            if (win.window.closed) {
+                closedWindows.push(id);
+            } else {
+                let newPosition = {
+                    'left': win.window.screenLeft,
+                    'top': win.window.screenTop,
+                    'width': win.window.outerWidth,
+                    'height': win.window.outerHeight,
+                    'innerWidth': win.window.innerWidth,
+                    'innerHeight': win.window.innerHeight,
+                    'screen': `${win.window.screen.availLeft},${win.window.screen.availTop}`
+                };
 
-                changes.push({
-                    'windowId': win.window.name,
-                    ...newPosition
-                });
+                if (!shallowEqual(win.position, newPosition)) {
+                    win.position = newPosition;
+
+                    changes.push({
+                        'windowId': win.id,
+                        ...newPosition
+                    });
+                }
             }
         }
     }
 
-    if (changes.length > 0) {
-        await windowManagement.OnWindowPositionsChanged(changes);
+    if (windowManagement != null) {
+        if (closedWindows.length > 0) {
+            await windowManagement.OnWindowClosed(closedWindows);
+        }
+
+        if (changes.length > 0) {
+            await windowManagement.OnWindowPositionsChanged(changes);
+        }
+    }
+
+    if (closedWindows.length > 0) {
+        closedWindows.forEach(id => delete windows[id]);
     }
 }
 

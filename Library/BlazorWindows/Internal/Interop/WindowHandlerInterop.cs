@@ -27,9 +27,9 @@ namespace KST.Blazor.Windows.Internal.Interop
 			}
 
 			[JSInvokable]
-			public void OnWindowClosed(string id)
+			public void OnWindowClosed(string[] ids)
 			{
-				this.aWindowManagement.OnWindowClosed(Guid.Parse(id));
+				this.aWindowManagement.OnWindowClosed(ids.Select(Guid.Parse).ToArray());
 			}
 
 			[JSInvokable]
