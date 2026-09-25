@@ -336,7 +336,7 @@ export function Init() {
     document.addEventListener("pointerdown", trackActiveWindow, true);
     document.addEventListener("keydown", trackActiveWindow, true);
 
-    window.addEventListener("unload", closeAllWindows);
+    window.addEventListener("pagehide", closeAllWindows);
 
     setRefreshWindowPositionsTimer();
 
