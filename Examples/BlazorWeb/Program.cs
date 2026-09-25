@@ -1,10 +1,16 @@
 using BlazorWeb.Components;
+using KST.Blazor.Windows;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
+
+builder.Services.AddBlazorWindows(x =>
+{
+	x.EnableMultiScreenWindowPlacement = true;
+});
 
 var app = builder.Build();
 

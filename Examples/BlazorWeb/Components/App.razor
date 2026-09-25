@@ -13,9 +13,10 @@
 </head>
 
 <body>
-    <Routes />
-    <ReconnectModal />
-    <script src="@Assets["_framework/blazor.web.js"]"></script>
+
+<Routes @rendermode="InteractiveServer" />
+<ReconnectModal/>
+<script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 
 </html>
