@@ -297,6 +297,16 @@ async function refreshWindowPositions() {
     }
 }
 
+function setRefreshWindowPositionsTimer() {
+    window.setTimeout(async () => {
+        try {
+            await refreshWindowPositions();
+        } finally {
+            setRefreshWindowPositionsTimer();
+        }
+    }, 100);
+}
+
 function checkInitialized() {
     if (!initialized) {
         throw new Error("Module WindowHandler.js from KST.Blazor.Windows library was not initialized yet");
@@ -328,7 +338,7 @@ export function Init() {
 
     window.addEventListener("unload", closeAllWindows);
 
-    window.setInterval(refreshWindowPositions, 100);
+    setRefreshWindowPositionsTimer();
 
     initialized = true;
 }
