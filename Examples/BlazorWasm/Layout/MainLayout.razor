@@ -1,3 +1,19 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Reflection
+@using KST.Blazor.Windows.Examples
+@inherits LayoutComponentBase
+
+<ul>
+    @foreach (var exampleType in typeof(ExampleAttribute).Assembly.GetTypes().Where(x => x.GetCustomAttribute<ExampleAttribute>() is not null).OrderBy(x => x.FullName))
+    {
+        var url = (exampleType.GetCustomAttribute<RouteAttribute>() ?? throw new Exception("Example component is not a page")).Template;
+        var title = exampleType.GetCustomAttribute<ExampleAttribute>()!.Title;
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="@url">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> @title
+            </NavLink>
+        </li>
+    }
+</ul>
 
 @Body
