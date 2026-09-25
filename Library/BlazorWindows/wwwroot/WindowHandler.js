@@ -108,7 +108,14 @@ export async function GetMultiScreenWindowPlacementStatus() {
 
     if ("getScreens" in window || "getScreenDetails" in window) {
         try {
-            const { state } = await navigator.permissions.query({ name: "window-placement" });
+            const { state } = await (async () => {
+                try {
+                    return await navigator.permissions.query({ name: "window-management" })
+                } catch (error) {
+                    // Fallback for older chrome/chromium browsers that support the "window-placement" permission instead of "window-management"
+                    return await navigator.permissions.query({ name: "window-placement" })
+                }
+            })();
             if (state === "prompt")
                 return "Possible";
             else if (state === "granted")
