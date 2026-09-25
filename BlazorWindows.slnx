@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Examples/">
+    <Project Path="Examples/BlazorWeb/BlazorWeb.csproj" Id="6c6b7f42-58ee-41d3-880e-60fdb80147f5" />
     <Project Path="Examples/Examples/Examples.csproj" />
   </Folder>
   <Folder Name="/Library/">
