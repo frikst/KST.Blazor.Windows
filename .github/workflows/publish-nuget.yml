@@ -1,0 +1,42 @@
+name: Publish NuGet package
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Set package version from tag
+        id: set-version
+        run: echo "PACKAGE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Pack
+        run: |
+          mkdir -p ./artifacts
+          dotnet pack --configuration Release --output ./artifacts /p:PackageVersion=$PACKAGE_VERSION
+
+      - name: Push to NuGet.org
+        if: success()
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          echo "Pushing packages from ./artifacts"
+          ls -la ./artifacts || true
+          dotnet nuget push ./artifacts/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
