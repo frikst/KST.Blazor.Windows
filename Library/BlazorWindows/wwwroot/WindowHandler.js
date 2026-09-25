@@ -5,7 +5,6 @@ const blazorElRegex = /^\[_bl_(\w{8}-\w{4}-\w{4}-\w{4}-\w{12}|\d+)\]$/i;
 var windows = {};
 var eventListeners = [];
 var windowManagement = null;
-var screenDetails = null;
 var lastActiveWindow = window;
 
 var initialized = false;
@@ -107,25 +106,16 @@ export function CloseWindow(id) {
 export async function GetMultiScreenWindowPlacementStatus() {
     checkInitialized();
 
-    if (!("getScreenDetails" in window))
-        return "NotPossible";
-
-    if (!("permissions" in navigator))
-        return "Possible";
-
-    try {
-        const { state } = await navigator.permissions.query({ name: "window-management" });
-
-        if (state === "granted")
-            return "Allowed";
-
-        if (state === "prompt")
-            return "Possible";
-    } catch (error) {
-        // getScreenDetails() is the authoritative feature check. A browser may
-        // expose it without supporting this Permissions API descriptor query.
-        console.warn("Unable to query the window-management permission.", error);
-        return "Possible";
+    if ("getScreens" in window || "getScreenDetails" in window) {
+        try {
+            const { state } = await navigator.permissions.query({ name: "window-placement" });
+            if (state === "prompt")
+                return "Possible";
+            else if (state === "granted")
+                return "Allowed";
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return "NotPossible";
@@ -133,39 +123,31 @@ export async function GetMultiScreenWindowPlacementStatus() {
 
 export async function SetMultiScreenWindowPlacement(enabled) {
     checkInitialized();
-    stopScreenMonitoring();
 
-    if (!enabled || !("getScreenDetails" in window)) {
+    if (enabled) {
+        let screens;
+        try {
+            if ("getScreenDetails" in window) {
+                screens = await window.getScreenDetails();
+            } else {
+                screens = await window.getScreens();
+            }
+        } catch (error) {
+            console.error(error);
+            await processSingleScreen();
+            return;
+        }
+
+        if (Array.isArray(screens)) {
+            await processScreens(screens);
+        } else {
+            await processScreens(screens.screens);
+            screens.onscreenschange = async function() {
+                await processScreens(screens.screens);
+            };
+        }
+    } else {
         await processSingleScreen();
-        await refreshWindowPositions();
-        return;
-    }
-
-    try {
-        screenDetails = await window.getScreenDetails();
-        await processScreens(screenDetails.screens);
-        screenDetails.addEventListener("screenschange", screensChanged);
-        await refreshWindowPositions();
-    } catch (error) {
-        console.error(error);
-        stopScreenMonitoring();
-        await processSingleScreen();
-        await refreshWindowPositions();
-    }
-}
-
-async function screensChanged() {
-    if (screenDetails === null)
-        return;
-
-    await processScreens(screenDetails.screens);
-    await refreshWindowPositions();
-}
-
-function stopScreenMonitoring() {
-    if (screenDetails !== null) {
-        screenDetails.removeEventListener("screenschange", screensChanged);
-        screenDetails = null;
     }
 }
 
@@ -205,7 +187,7 @@ async function processScreens(screens) {
                 'Top': screen.availTop,
                 'Width': screen.availWidth,
                 'Height': screen.availHeight,
-                'IsPrimary': screen.isPrimary
+                'IsPrimary': screen.isPrimary ?? screen.primary
             }))
         );
     }
@@ -274,7 +256,6 @@ async function refreshWindowPositions() {
     for (let id in windows) {
         if (windows.hasOwnProperty(id)) {
             let win = windows[id];
-            let currentScreen = getCurrentScreen(win.window);
             let newPosition = {
                 'left': win.window.screenLeft,
                 'top': win.window.screenTop,
@@ -282,7 +263,7 @@ async function refreshWindowPositions() {
                 'height': win.window.outerHeight,
                 'innerWidth': win.window.innerWidth,
                 'innerHeight': win.window.innerHeight,
-                'screen': `${currentScreen.availLeft ?? 0},${currentScreen.availTop ?? 0}`
+                'screen': `${win.window.screen.availLeft},${win.window.screen.availTop}`
             };
 
             if (!shallowEqual(win.position, newPosition)) {
@@ -299,38 +280,6 @@ async function refreshWindowPositions() {
     if (changes.length > 0) {
         await windowManagement.OnWindowPositionsChanged(changes);
     }
-}
-
-function getCurrentScreen(win) {
-    if (screenDetails === null || screenDetails.screens.length === 0)
-        return win.screen;
-
-    const windowLeft = win.screenLeft;
-    const windowTop = win.screenTop;
-    const windowRight = windowLeft + win.outerWidth;
-    const windowBottom = windowTop + win.outerHeight;
-
-    let currentScreen = screenDetails.screens[0];
-    let largestIntersection = -1;
-
-    for (const screen of screenDetails.screens) {
-        const intersectionWidth = Math.max(
-            0,
-            Math.min(windowRight, screen.left + screen.width) - Math.max(windowLeft, screen.left)
-        );
-        const intersectionHeight = Math.max(
-            0,
-            Math.min(windowBottom, screen.top + screen.height) - Math.max(windowTop, screen.top)
-        );
-        const intersection = intersectionWidth * intersectionHeight;
-
-        if (intersection > largestIntersection) {
-            currentScreen = screen;
-            largestIntersection = intersection;
-        }
-    }
-
-    return currentScreen;
 }
 
 function checkInitialized() {
@@ -353,9 +302,9 @@ function shallowEqual(object1, object2) {
 }
 
 export function Init() {
-    if (initialized)
-        return;
-
+    if (initialized) {
+        throw new Error("Module WindowHandler.js from KST.Blazor.Windows library cannot be initialized twice");
+    }
     document.addEventListener = customAddEventListener;
     document.querySelector = customQuerySelector;
 
