@@ -144,7 +144,16 @@ namespace KST.Blazor.Windows.Internal.Interop
 		public async ValueTask DisposeAsync()
 		{
 			if (this.aModule.IsValueCreated)
-				await (await this.aModule.Value).DisposeAsync();
+			{
+				try
+				{
+					await (await this.aModule.Value).DisposeAsync();
+				}
+				catch (JSDisconnectedException)
+				{
+					// Ignore JSDisconnectedException, as it means the JS runtime is already disposed
+				}
+			}
 		}
 	}
 }
