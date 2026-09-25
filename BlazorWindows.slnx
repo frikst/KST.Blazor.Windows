@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Examples/">
+    <Project Path="Examples/BlazorServer/BlazorServer.csproj" />
+    <Project Path="Examples/BlazorWebAssembly/BlazorWebAssembly.csproj" />
+    <Project Path="Examples/Examples/Examples.csproj" />
+  </Folder>
+  <Folder Name="/Library/">
+    <Project Path="Library/BlazorWindows.Abstractions/BlazorWindows.Abstractions.csproj" />
+    <Project Path="Library/BlazorWindows/BlazorWindows.csproj" />
+  </Folder>
+  <Folder Name="/ProjectInfo/">
+    <File Path="CHANGELOG.md" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>
