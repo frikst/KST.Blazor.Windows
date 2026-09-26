@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using KST.Blazor.Windows.Abstractions;
 using KST.Blazor.Windows.Internal.Interop;
@@ -20,8 +21,13 @@ namespace KST.Blazor.Windows.Internal
 		/// Javascript interop service
 		/// </summary>
 		[Inject]
-		public WindowHandlerInterop WindowHandler { get; set; }
-			= default!;
+		public required WindowHandlerInterop WindowHandler { get; set; }
+
+		/// <summary>
+		/// Window management service
+		/// </summary>
+		[Inject]
+		public required IWindowManagement WindowManagement { get; set; }
 
 		/// <summary>
 		/// Window to be managed by the component
@@ -75,7 +81,9 @@ namespace KST.Blazor.Windows.Internal
 				await this.WindowHandler.OpenWindowAsync(
 					impl.Id,
 					this.aWindowElementRef,
-					impl.WindowOptions.InitialPosition.BuildWindowPosition(),
+					impl.WindowOptions.InitialPosition.BuildWindowPosition(
+						this.WindowManagement.Screens.First()
+					),
 					impl.WindowOptions.Title
 				);
 				impl.AfterOpen();

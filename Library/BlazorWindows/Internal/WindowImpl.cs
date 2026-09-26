@@ -54,7 +54,7 @@ namespace KST.Blazor.Windows.Internal
 
 			await this.aWindowHandler.MoveWindowAsync(
 				this.Id,
-				newPosition.BuildWindowPosition()
+				newPosition.BuildWindowPosition(this.Boundaries.Screen)
 			);
 		}
 

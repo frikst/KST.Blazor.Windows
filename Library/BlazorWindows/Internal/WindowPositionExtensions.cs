@@ -8,21 +8,23 @@ internal static class WindowPositionExtensions
 {
 	extension (WindowPosition windowPosition)
 	{
-		public WindowPositionInterop BuildWindowPosition()
+		public WindowPositionInterop BuildWindowPosition(IScreen defaultScreen)
 		{
+			var screen = (windowPosition as WindowPositionAtScreen)?.Screen ?? defaultScreen;
+
 			return windowPosition switch
 			{
 				WindowPositionAbsolute position => WindowPosition.BuildPosition(
-					position.Screen,
+					screen,
 					position.Left,
 					position.Top,
 					position.Width,
 					position.Height
 				),
 				WindowPositionCentered position => WindowPosition.BuildPosition(
-					position.Screen,
-					(position.Screen!.Width - position.Width) / 2,
-					(position.Screen!.Height - position.Height) / 2,
+					screen,
+					(screen.Width - position.Width) / 2,
+					(screen.Height - position.Height) / 2,
 					position.Width,
 					position.Height
 				),
@@ -30,16 +32,16 @@ internal static class WindowPositionExtensions
 					WindowPositionKind.Window
 				),
 				WindowPositionDefault position => WindowPosition.BuildPosition(
-					position.Screen,
+					screen,
 					0,
 					0
 				),
 				WindowPositionMaximized position => WindowPosition.BuildPosition(
-					position.Screen,
+					screen,
 					0,
 					0,
-					position.Screen!.Width,
-					position.Screen!.Height,
+					screen.Width,
+					screen.Height,
 					WindowPositionKind.Maximized
 				),
 				WindowPositionInTab => new WindowPositionInterop(
@@ -49,12 +51,12 @@ internal static class WindowPositionExtensions
 			};
 		}
 
-		private static WindowPositionInterop BuildPosition(IScreen? screen, int left, int top, int? width = null, int? height = null, WindowPositionKind positionKind = WindowPositionKind.Window)
+		private static WindowPositionInterop BuildPosition(IScreen screen, int left, int top, int? width = null, int? height = null, WindowPositionKind positionKind = WindowPositionKind.Window)
 		{
 			return new WindowPositionInterop(
 				positionKind,
-				left + screen?.Left ?? 0,
-				top + screen?.Top ?? 0,
+				left + screen.Left,
+				top + screen.Top,
 				width,
 				height
 			);
