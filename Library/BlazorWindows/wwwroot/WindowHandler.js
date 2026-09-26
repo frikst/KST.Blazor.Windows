@@ -183,7 +183,7 @@ export async function SetWindowManagementAPI(enabled) {
 }
 
 function buildWindowFeatures(windowPositionObject) {
-    if (!windowPositionObject.positionKind === "Tab")
+    if (windowPositionObject.positionKind === "Tab")
         return "";
 
     let windowFeatures = "popup=yes";
