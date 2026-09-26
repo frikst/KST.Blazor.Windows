@@ -25,6 +25,11 @@ namespace KST.Blazor.Windows.Abstractions
 		string Title { get; }
 
 		/// <summary>
+		/// True if window is a tab in a browser window, false if it is a separate browser window
+		/// </summary>
+		bool IsTab { get; }
+
+		/// <summary>
 		/// Contains outer and inner window size and window position
 		/// </summary>
 		WindowBoundaries Boundaries { get; }

@@ -21,11 +21,14 @@ namespace KST.Blazor.Windows.Internal
 			this.Title = options.Title ?? string.Empty;
 			this.aOpenTask = new TaskCompletionSource();
 			this.aBoundaries = null;
+
+			this.IsTab = options.InitialPosition is WindowPositionInTab;
 		}
 
 		public Guid Id { get; }
 
 		public string Title { get; private set; }
+		public bool IsTab { get; }
 
 		public WindowBoundaries Boundaries
 			=> this.aBoundaries ?? throw new InvalidOperationException("Boundaries was not set yet. Should not happen.");
@@ -45,6 +48,9 @@ namespace KST.Blazor.Windows.Internal
 		{
 			if (this.IsDisposed)
 				throw new InvalidOperationException("Cannot move disposed window");
+
+			if (this.IsTab)
+				throw new InvalidOperationException("Cannot move tab window");
 
 			await this.aWindowHandler.MoveWindowAsync(
 				this.Id,
