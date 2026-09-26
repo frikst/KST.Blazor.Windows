@@ -36,6 +36,12 @@ namespace KST.Blazor.Windows.Abstractions
 		Task ChangeTitleAsync(string title);
 
 		/// <summary>
+		/// Moves window to the given position
+		/// </summary>
+		/// <param name="newPosition">New window position</param>
+		Task MoveToAsync(WindowPositionAtScreen newPosition);
+
+		/// <summary>
 		/// Closes window
 		/// </summary>
 		/// <returns></returns>

@@ -8,9 +8,16 @@
 <SelectWindow @bind-Window="this.aSelectedWindow" />
 <br />
 <button class="btn btn-primary" @onclick="this.CloseWindow">Close window</button>
+<hr />
+<SelectScreen @bind-Screen="this.aSelectedScreen" />
+<br />
+<SelectPosition @bind-Position="this.aSelectedPosition" />
+<button class="btn btn-primary" @onclick="this.MoveWindow">Move window</button>
 
 @code {
     private IWindow? aSelectedWindow = null;
+    private IScreen? aSelectedScreen;
+    private WindowPosition aSelectedPosition = new WindowPositionDefault();
 
     private async Task CloseWindow()
     {
@@ -19,4 +26,21 @@
 
         await this.aSelectedWindow.CloseAsync();
     }
+
+    private async Task MoveWindow()
+    {
+        if (this.aSelectedWindow is null)
+            return;
+
+        var position = this.aSelectedPosition;
+
+        if (position is WindowPositionAtScreen positionAtScreen)
+        {
+            if (this.aSelectedScreen is not null)
+                positionAtScreen = positionAtScreen with { Screen = this.aSelectedScreen };
+
+            await this.aSelectedWindow.MoveToAsync(positionAtScreen);
+        }
+    }
+
 }

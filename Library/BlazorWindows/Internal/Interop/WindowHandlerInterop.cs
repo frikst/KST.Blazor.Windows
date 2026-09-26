@@ -110,6 +110,19 @@ namespace KST.Blazor.Windows.Internal.Interop
 		}
 
 		/// <summary>
+		/// Moves window to the given position
+		/// </summary>
+		/// <param name="id">Window id</param>
+		/// <param name="newPosition"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public async Task MoveWindowAsync(Guid id, WindowPositionInterop newPosition)
+		{
+			var module = await this.aModule.Value;
+			await module.InvokeVoidAsync("MoveWindow", id.ToString(), newPosition);
+		}
+
+		/// <summary>
 		/// Closes window
 		/// </summary>
 		/// <param name="id">Window id</param>

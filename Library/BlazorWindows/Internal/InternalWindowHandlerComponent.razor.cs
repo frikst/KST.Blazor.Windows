@@ -72,37 +72,13 @@ namespace KST.Blazor.Windows.Internal
 
 			if (this.Window is WindowImpl impl)
 			{
-				await this.WindowHandler.OpenWindowAsync(impl.Id, this.aWindowElementRef, this.BuildWindowPosition(impl.WindowOptions.InitialPosition), impl.WindowOptions.Title);
+				await this.WindowHandler.OpenWindowAsync(
+					impl.Id,
+					this.aWindowElementRef,
+					impl.WindowOptions.InitialPosition.BuildWindowPosition(),
+					impl.WindowOptions.Title
+				);
 				impl.AfterOpen();
-			}
-		}
-
-		private WindowPositionInterop BuildWindowPosition(Abstractions.WindowPosition initialPosition)
-		{
-			switch (initialPosition)
-			{
-				case WindowPositionAbsolute position:
-					return BuildPosition(position.Screen, position.Left, position.Top, position.Width, position.Height);
-				case WindowPositionCentered position:
-					return BuildPosition(position.Screen, (position.Screen!.Width - position.Width) / 2, (position.Screen!.Height - position.Height) / 2, position.Width, position.Height);
-				case WindowPositionDefault { Screen: null }:
-					return new WindowPositionInterop(WindowPositionKind.Window);
-				case WindowPositionDefault position:
-					return BuildPosition(position.Screen, 0, 0);
-				case WindowPositionMaximized position:
-					return BuildPosition(position.Screen, 0, 0, position.Screen!.Width, position.Screen!.Height, WindowPositionKind.Maximized);
-				case WindowPositionInTab:
-					return new WindowPositionInterop(WindowPositionKind.Tab);
-				default:
-					throw new ArgumentOutOfRangeException(nameof(initialPosition));
-			}
-
-			static WindowPositionInterop BuildPosition(IScreen? screen, int left, int top, int? width = null, int? height = null, WindowPositionKind positionKind = WindowPositionKind.Window)
-			{
-				if (screen is null)
-					return new WindowPositionInterop(positionKind, left, top, width, height);
-				else
-					return new WindowPositionInterop(positionKind, left + screen.Left, top + screen.Top, width, height);
 			}
 		}
 

@@ -41,6 +41,17 @@ namespace KST.Blazor.Windows.Internal
 			this.Title = title;
 		}
 
+		public async Task MoveToAsync(WindowPositionAtScreen newPosition)
+		{
+			if (this.IsDisposed)
+				throw new InvalidOperationException("Cannot move disposed window");
+
+			await this.aWindowHandler.MoveWindowAsync(
+				this.Id,
+				newPosition.BuildWindowPosition()
+			);
+		}
+
 		public async Task CloseAsync()
 		{
 			if (this.IsDisposed)

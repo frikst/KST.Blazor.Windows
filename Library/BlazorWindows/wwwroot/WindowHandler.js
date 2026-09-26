@@ -98,6 +98,29 @@ export function ChangeWindowTitle(id, title) {
     windows[id].window.document.title = title;
 }
 
+export async function MoveWindow(id, newPosition) {
+    checkInitialized();
+
+    const win = windows[id].window;
+
+    if ('maximize' in win && newPosition.positionKind === 'Maximized' && (await GetWindowManagementAPIStatus()) === 'Allowed') {
+        win.maximize();
+    } else {
+        if (newPosition.left !== null || newPosition.top !== null) {
+            let left = newPosition.left ?? win.screenLeft;
+            let top = newPosition.top ?? win.screenTop;
+            win.moveTo(left, top);
+        }
+
+        if (newPosition.width !== null || newPosition.height !== null) {
+            let width = newPosition.width ?? win.outerWidth;
+            let height = newPosition.height ?? win.outerHeight;
+
+            win.resizeTo(width, height);
+        }
+    }
+}
+
 export function CloseWindow(id) {
     checkInitialized();
 
