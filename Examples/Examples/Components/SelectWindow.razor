@@ -1,0 +1,13 @@
+<label for="window">Select window:</label>
+<select id="window" @bind="this.aSelectedWindow" @bind:after="OnSelectedWindowChanged">
+    <option value="-1"></option>
+
+    @{ var windowIndex = 0; }
+    @foreach (var window in this.WindowManagement.Windows)
+    {
+        <option value="@windowIndex">
+            @window.Id | @window.Title
+        </option>
+        windowIndex++;
+    }
+</select>

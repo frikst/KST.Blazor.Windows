@@ -1,0 +1,12 @@
+<label for="screen">Select screen:</label>
+<select id="screen" @bind="this.aSelectedScreen" @bind:after="this.OnSelectedScreenChanged">
+    <option value="-1"><i>(null)</i></option>
+    @{ var screenId = 0;}
+    @foreach (var screen in this.WindowManagement.Screens)
+    {
+        <option value="@screenId">
+            @screen.Left, @screen.Top @screen.Width &times; @screen.Height
+        </option>
+        screenId++;
+    }
+</select>

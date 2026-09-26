@@ -1,0 +1,11 @@
+<label for="position">Select position:</label>
+<select id="position" @bind="this.aSelectedPosition" @bind:after="this.OnSelectedPositionChanged">
+    @{ var positionId = 0;}
+    @foreach (var position in aPosiblePositions)
+    {
+        <option value="@positionId">
+            @position
+        </option>
+        positionId++;
+    }
+</select>
