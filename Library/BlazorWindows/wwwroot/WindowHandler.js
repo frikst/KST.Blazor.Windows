@@ -2,7 +2,7 @@
 const originalQuerySelector = document.querySelector;
 const blazorElRegex = /^\[_bl_(\w{8}-\w{4}-\w{4}-\w{4}-\w{12}|\d+)\]$/i;
 
-var windows = {};
+var windows = new Map();
 var eventListeners = [];
 var windowManagement = null;
 var lastActiveWindow = window;
@@ -66,18 +66,14 @@ function removeDisconnectOverlayFromWindow(win) {
 }
 
 function addDisconnectOverlayToAllWindows() {
-    for (let id in windows) {
-        if (windows.hasOwnProperty(id)) {
-            addDisconnectOverlayToWindow(windows[id].window);
-        }
+    for (const win of windows.values()) {
+        addDisconnectOverlayToWindow(win.window);
     }
 }
 
 function removeDisconnectOverlayFromAllWindows() {
-    for (let id in windows) {
-        if (windows.hasOwnProperty(id)) {
-            removeDisconnectOverlayFromWindow(windows[id].window);
-        }
+    for (const win of windows.values()) {
+        removeDisconnectOverlayFromWindow(win.window);
     }
 }
 
@@ -90,11 +86,11 @@ export async function OpenWindow(id, content, windowPosition, windowTitle) {
     if (win === null)
         throw new Error("The browser blocked the new window. Open it directly from a user interaction and allow pop-ups for this site.");
 
-    windows[id] = {
+    windows.set(id, {
         'window': win,
         'id': id,
         'position': null
-    };
+    });
 
     await waitForEvent(win, "load");
 
@@ -155,13 +151,13 @@ function trackActiveWindow(event) {
 export function ChangeWindowTitle(id, title) {
     checkInitialized();
 
-    windows[id].window.document.title = title;
+    windows.get(id).window.document.title = title;
 }
 
 export async function MoveWindow(id, newPosition) {
     checkInitialized();
 
-    const win = windows[id].window;
+    const win = windows.get(id).window;
 
     if ('maximize' in win && newPosition.positionKind === 'Maximized' && (await GetWindowManagementAPIStatus()) === 'Allowed') {
         win.maximize();
@@ -184,7 +180,7 @@ export async function MoveWindow(id, newPosition) {
 export function CloseWindow(id) {
     checkInitialized();
 
-    windows[id].window.close();
+    windows.get(id).window.close();
 }
 
 export async function GetWindowManagementAPIStatus() {
@@ -294,10 +290,8 @@ async function processSingleScreen() {
 function customAddEventListener(type, listener, options) {
     eventListeners.push([type, listener, options]);
 
-    for (let id in windows) {
-        if (windows.hasOwnProperty(id)) {
-            windows[id].window.document.addEventListener(type, listener, options);
-        }
+    for (const win of windows.values()) {
+        win.window.document.addEventListener(type, listener, options);
     }
 
     originalAddEventListener.call(this, type, listener, options);
@@ -310,12 +304,10 @@ function customQuerySelector(selector) {
         return result;
 
     if (blazorElRegex.test(selector)) {
-        for (let id in windows) {
-            if (windows.hasOwnProperty(id)) {
-                let element = windows[id].window.document.querySelector(selector);
-                if (element !== null)
-                    return element;
-            }
+        for (const win of windows.values()) {
+            let element = win.window.document.querySelector(selector);
+            if (element !== null)
+                return element;
         }
     }
 
@@ -323,10 +315,8 @@ function customQuerySelector(selector) {
 }
 
 function closeAllWindows() {
-    for (let id in windows) {
-        if (windows.hasOwnProperty(id)) {
-            windows[id].window.close();
-        }
+    for (const win of windows.values()) {
+        win.window.close();
     }
 }
 
@@ -338,31 +328,27 @@ async function refreshWindowPositions() {
     let changes = [];
     let closedWindows = [];
 
-    for (const id in windows) {
-        if (windows.hasOwnProperty(id)) {
-            let win = windows[id];
+    for (const [id, win] of windows) {
+        if (win.window.closed) {
+            closedWindows.push(id);
+        } else {
+            let newPosition = {
+                'left': win.window.screenLeft,
+                'top': win.window.screenTop,
+                'width': win.window.outerWidth,
+                'height': win.window.outerHeight,
+                'innerWidth': win.window.innerWidth,
+                'innerHeight': win.window.innerHeight,
+                'screen': `${win.window.screen.availLeft},${win.window.screen.availTop}`
+            };
 
-            if (win.window.closed) {
-                closedWindows.push(id);
-            } else {
-                let newPosition = {
-                    'left': win.window.screenLeft,
-                    'top': win.window.screenTop,
-                    'width': win.window.outerWidth,
-                    'height': win.window.outerHeight,
-                    'innerWidth': win.window.innerWidth,
-                    'innerHeight': win.window.innerHeight,
-                    'screen': `${win.window.screen.availLeft},${win.window.screen.availTop}`
-                };
+            if (!shallowEqual(win.position, newPosition)) {
+                win.position = newPosition;
 
-                if (!shallowEqual(win.position, newPosition)) {
-                    win.position = newPosition;
-
-                    changes.push({
-                        'windowId': win.id,
-                        ...newPosition
-                    });
-                }
+                changes.push({
+                    'windowId': win.id,
+                    ...newPosition
+                });
             }
         }
     }
@@ -378,7 +364,7 @@ async function refreshWindowPositions() {
     }
 
     if (closedWindows.length > 0) {
-        closedWindows.forEach(id => delete windows[id]);
+        closedWindows.forEach(id => windows.delete(id));
     }
 }
 
