@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -33,12 +36,13 @@ jobs:
           dotnet pack --configuration Release --output ./artifacts /p:PackageVersion=$PACKAGE_VERSION
 
       - name: Create GitHub Release and upload package artifacts
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ github.ref_name }}
-          files: ./artifacts/*.nupkg
+        run: >
+          gh release create "${{ github.ref_name }}"
+          ./artifacts/*.nupkg
+          --verify-tag
+          --generate-notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: NuGet login
         uses: NuGet/login@v1
