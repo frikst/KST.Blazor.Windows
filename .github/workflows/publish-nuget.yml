@@ -34,7 +34,8 @@ jobs:
       - name: Pack
         run: |
           mkdir -p ./artifacts
-          dotnet pack --configuration Release --output ./artifacts /p:PackageVersion=$PACKAGE_VERSION
+          dotnet pack ./Library/BlazorWindows.Abstractions/BlazorWindows.Abstractions.csproj --configuration Release --output ./artifacts /p:PackageVersion=$PACKAGE_VERSION
+          dotnet pack ./Library/BlazorWindows/BlazorWindows.csproj --configuration Release --output ./artifacts /p:PackageVersion=$PACKAGE_VERSION
 
       - name: Create GitHub Release and upload package artifacts
         run: >
