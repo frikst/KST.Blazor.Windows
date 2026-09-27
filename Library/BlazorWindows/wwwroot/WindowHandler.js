@@ -8,6 +8,10 @@ var windowManagement = null;
 var lastActiveWindow = window;
 
 var initialized = false;
+var isDisconnected = false;
+
+const DISCONNECT_OVERLAY_ID = "kst-blazor-windows-disconnect-overlay";
+const DISCONNECT_MESSAGE_ID = "kst-blazor-windows-disconnect-message";
 
 export function AssignWindowManagement(windowManagementRef) {
     checkInitialized();
@@ -16,13 +20,65 @@ export function AssignWindowManagement(windowManagementRef) {
         'OnWindowClosed': async function (ids) {
             await windowManagementRef.invokeMethodAsync("OnWindowClosed", ids);
         },
-        'OnScreensChanged': async function(screens) {
+        'OnScreensChanged': async function (screens) {
             await windowManagementRef.invokeMethodAsync("OnScreensChanged", screens);
         },
-        'OnWindowPositionsChanged': async function(windowPositions) {
+        'OnWindowPositionsChanged': async function (windowPositions) {
             await windowManagementRef.invokeMethodAsync("OnWindowPositionsChanged", windowPositions);
         }
     };
+}
+
+function createDisconnectOverlayDocument(doc) {
+    const overlay = doc.createElement("div");
+    overlay.setAttribute("id", DISCONNECT_OVERLAY_ID);
+
+    const message = doc.createElement("div");
+    message.setAttribute("id", DISCONNECT_MESSAGE_ID);
+    message.textContent = "Connection to server lost";
+
+    overlay.appendChild(message);
+
+    return overlay;
+}
+
+function addDisconnectOverlayToWindow(win) {
+    if (!win || win.closed)
+        return;
+
+    const existing = win.document.getElementById(DISCONNECT_OVERLAY_ID);
+    if (existing !== null)
+        return;
+
+    const overlay = createDisconnectOverlayDocument(win.document);
+    win.document.body.appendChild(overlay);
+}
+
+function removeDisconnectOverlayFromWindow(win) {
+    if (!win || win.closed)
+        return;
+
+    const existing = win.document.getElementById(DISCONNECT_OVERLAY_ID);
+    if (existing === null)
+        return;
+
+    existing.remove();
+}
+
+function addDisconnectOverlayToAllWindows() {
+    for (let id in windows) {
+        if (windows.hasOwnProperty(id)) {
+            addDisconnectOverlayToWindow(windows[id].window);
+        }
+    }
+}
+
+function removeDisconnectOverlayFromAllWindows() {
+    for (let id in windows) {
+        if (windows.hasOwnProperty(id)) {
+            removeDisconnectOverlayFromWindow(windows[id].window);
+        }
+    }
 }
 
 export async function OpenWindow(id, content, windowPosition, windowTitle) {
@@ -74,6 +130,10 @@ export async function OpenWindow(id, content, windowPosition, windowTitle) {
 
     for (let listener of eventListeners) {
         win.document.addEventListener(listener[0], listener[1], listener[2]);
+    }
+
+    if (isDisconnected) {
+        addDisconnectOverlayToWindow(win);
     }
 
     await refreshWindowPositions();
@@ -351,6 +411,16 @@ function shallowEqual(object1, object2) {
     return keys1.every(key => object2.hasOwnProperty(key) && object1[key] === object2[key])
 }
 
+function onComponentsReconnectStateChanged(event) {
+    if (event && event.detail && event.detail.state === "show") {
+        isDisconnected = true;
+        addDisconnectOverlayToAllWindows();
+    } else if (event && event.detail && event.detail.state === "hide") {
+        isDisconnected = false;
+        removeDisconnectOverlayFromAllWindows();
+    }
+}
+
 export function Init() {
     if (initialized) {
         throw new Error("Module WindowHandler.js from KST.Blazor.Windows library cannot be initialized twice");
@@ -362,6 +432,8 @@ export function Init() {
     document.addEventListener("keydown", trackActiveWindow, true);
 
     window.addEventListener("pagehide", closeAllWindows);
+
+    document.addEventListener("components-reconnect-state-changed", onComponentsReconnectStateChanged, true);
 
     setRefreshWindowPositionsTimer();
 
